@@ -1,0 +1,14 @@
+{
+  "name": "LineBot",
+  "description": "Line Bot API tester",
+  "repository": "https://github.com/kkdai/LineBotTemplate",
+  "keywords": ["Line", "go", "static"],
+  "buildpacks": [
+    {
+      "url": "https://github.com/kr/heroku-buildpack-go.git"
+    },
+    {
+      "url": "heroku/go"
+    }
+  ]
+}
