@@ -121,7 +121,7 @@ func request(endpointURL string, method string, to []string, content Content) {
 	if err != nil {
 		log.Print(err)
 	}
-	// defer res.Body.Close()
+	defer res.Body.Close()
 
 	var result map[string]interface{}
 	body, err := ioutil.ReadAll(res.Body)

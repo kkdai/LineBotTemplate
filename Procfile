@@ -1,2 +1,2 @@
-web: LineBot
+web: LineBotTemplate
 
