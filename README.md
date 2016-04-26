@@ -52,6 +52,11 @@ You will get following info, need fill back to Heroku.
 It all done.	
 
 
+
+### Chinese Tutorial:
+
+如果你看得懂繁體中文，這裡有[中文的介紹](http://www.evanlin.com/create-your-line-bot-golang/) 
+
 Inspired By
 =============
 
