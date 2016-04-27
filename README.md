@@ -20,13 +20,32 @@ Installation and Usage
 
 Remember your heroku, ID.
 
+<br><br>
+
 ### 3. Enable Fixed IP service
 
+![](images/linebotH2.png)
 Clone the heroku git to your locally, use follow command to setup ([Fixie](https://elements.heroku.com/addons/fixie)) service for free.
 
-`heroku addons:create fixie:tricycle`
+#### There are two ways to add this "add-on" for heroku.
 
-Remember your IP information.
+![](images/linebotH1.png)
+
+1. Through heroku dashboard:
+	- Launch Herou [dashboard](https://dashboard.heroku.com)
+	- Go your deploy app page
+	- Go to "Resource"
+	- Go to "FIND MORE ADD-ONS" 
+	- Find "Fixie"
+
+2. Through [Heroku Toolbelt](https://toolbelt.heroku.com/)
+	- `$ heroku login`
+	- `$ heroku git:clone -a linebotkkdaitest`
+	- `$ cd linebotkkdaitest`
+	- `$ heroku addons:create fixie:tricycle`
+
+Remember your IP information. 
+
 
 ### 4. Back to Line Bot Dashboard, setup basic API
 
