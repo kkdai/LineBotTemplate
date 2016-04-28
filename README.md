@@ -40,7 +40,7 @@ Clone the heroku git to your locally, use follow command to setup ([Fixie](https
 
 2. Through [Heroku Toolbelt](https://toolbelt.heroku.com/)
 	- `$ heroku login`
-	- `$ heroku git:clone -a linebotkkdaitest`
+	- `$ heroku git:clone -a <YOUR_HEROKU_APP_ID>`
 	- `$ cd linebotkkdaitest`
 	- `$ heroku addons:create fixie:tricycle`
 
