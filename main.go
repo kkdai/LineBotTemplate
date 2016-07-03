@@ -19,7 +19,6 @@ import (
 	"os"
 	"strconv"
 	"net/url"
-  	"net/http"
   	"io/ioutil"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
