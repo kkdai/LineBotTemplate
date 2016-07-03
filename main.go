@@ -18,13 +18,28 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
+	"net/url"
+  	"net/http"
+  	"io/ioutil"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
 var bot *linebot.Client
 
 func main() {
+	// fixie
+	fixieUrl, err := url.Parse(os.Getenv("FIXIE_URL"))
+  	customClient := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(fixieUrl)}}
+  	resp, err := customClient.Get("http://welcome.usefixie.com")
+  	if (err != nil) {
+    		println(err.Error())
+    		return
+  	}
+  	defer resp.Body.Close()
+  	body, err := ioutil.ReadAll(resp.Body)
+  	println(string(body))
+	
+	//
 	strID := os.Getenv("ChannelID")
 	numID, err := strconv.ParseInt(strID, 10, 64)
 	if err != nil {
