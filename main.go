@@ -51,6 +51,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, result := range received.Results {
 		content := result.Content()
+		log.Println("-->", content)
+
+		//Log detail receive content
+		if content != nil {
+			log.Println("RECEIVE Msg:", content.IsMessage, " OP:", content.IsOperation, " type:", content.ContentType, " from:", content.From, "to:", content.To, " ID:", content.ID)
+		}
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
 			text, err := content.TextContent()
 			_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
