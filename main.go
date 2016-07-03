@@ -39,7 +39,9 @@ func main() {
   	body, err := ioutil.ReadAll(resp.Body)
   	println(string(body))
 	
-	//
+	// end fixie
+	
+	// line bot
 	strID := os.Getenv("ChannelID")
 	numID, err := strconv.ParseInt(strID, 10, 64)
 	if err != nil {
