@@ -73,6 +73,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if content != nil {
 			log.Println("RECEIVE Msg:", content.IsMessage, " OP:", content.IsOperation, " type:", content.ContentType, " from:", content.From, "to:", content.To, " ID:", content.ID)
 		}
+		/*
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
 			text, err := content.TextContent()
 			_, err = bot.SendText([]string{content.From}, "Bot received : "+text.Text)
@@ -80,7 +81,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Println(err)
 			}
-		}
+		}*/
 		if content != nil && content.ContentType == linebot.ContentTypeLocation {
 			loc, err := content.LocationContent()
 
