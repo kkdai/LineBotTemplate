@@ -85,7 +85,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			loc, err := content.LocationContent()
 
 			// add eggyo geo test
-			resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + loc.Latitude +" , "+loc.Longitude)
+			resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + FloatToString(loc.Latitude) 
+			+ " , " + FloatToString(loc.Longitude))
 			if (err != nil) {
     				println(err.Error())
     				return
