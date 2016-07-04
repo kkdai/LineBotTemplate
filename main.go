@@ -68,6 +68,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	for _, result := range received.Results {
 		content := result.Content()
 		log.Println("-->", content)
+		// add eggyo geo test
+		resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + content.TextContent().Text)
+		if (err != nil) {
+    			println(err.Error())
+    			return
+  		}
+  		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		println(string(body))
 
 		//Log detail receive content
 		if content != nil {
