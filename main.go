@@ -75,6 +75,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
 			text, err := content.TextContent()
+			_, err = bot.SendText([]string{content.From}, "Bot received : "+text.Text)
+
+			if err != nil {
+				log.Println(err)
+			}
+		}
+		if content != nil && content.ContentType == linebot.ContentTypeLocation {
+			text, err := content.TextContent()
 			
 			// add eggyo geo test
 			resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + text.Text)
@@ -87,7 +95,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println(string(body))
 		
 			//_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
-			_, err = bot.SendText([]string{content.From}, string(body))
+			_, err = bot.SendText([]string{content.From}, "Geo test :" + string(body))
 
 			if err != nil {
 				log.Println(err)
