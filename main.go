@@ -69,7 +69,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		content := result.Content()
 		log.Println("-->", content)
 		// add eggyo geo test
-		resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + content.TextContent().Text)
+		resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + content.Text)
 		if (err != nil) {
     			println(err.Error())
     			return
