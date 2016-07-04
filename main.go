@@ -68,15 +68,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	for _, result := range received.Results {
 		content := result.Content()
 		log.Println("-->", content)
-		// add eggyo geo test
-		resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + content.Text)
-		if (err != nil) {
-    			println(err.Error())
-    			return
-  		}
-  		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		println(string(body))
 
 		//Log detail receive content
 		if content != nil {
@@ -84,6 +75,17 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
 			text, err := content.TextContent()
+			
+			// add eggyo geo test
+			resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + text.Text)
+			if (err != nil) {
+    				println(err.Error())
+    				return
+  			}
+  			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			log.println(string(body))
+		
 			_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
 			if err != nil {
 				log.Println(err)
