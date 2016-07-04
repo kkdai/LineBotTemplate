@@ -84,7 +84,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
   			}
   			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
-			log.println(string(body))
+			log.Println(string(body))
 		
 			_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
 			if err != nil {
