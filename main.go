@@ -82,10 +82,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if content != nil && content.ContentType == linebot.ContentTypeLocation {
-			text, err := content.TextContent()
-			
+			loc, err := content.LocationContent()
+
 			// add eggyo geo test
-			resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + text.Text)
+			resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + loc.Latitude +" , "+loc.Longitude)
 			if (err != nil) {
     				println(err.Error())
     				return
