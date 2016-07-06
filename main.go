@@ -114,8 +114,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
   			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
                         log.Println(string(body))
+
+                        geo, err := getGeoLoc([]byte(body))
 			//_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
-			_, err = bot.SendText([]string{content.From}, "Geo Results :" + string(body))
+			_, err = bot.SendText([]string{content.From}, "Geo Results :" + string(geo))
 
 			if err != nil {
 				log.Println(err)
