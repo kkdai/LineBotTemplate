@@ -25,6 +25,12 @@ import (
 
 var bot *linebot.Client
 
+type GeoContent struct {
+	LatLong    string `json:"latLon"`
+	Utm string `json:"utm"`
+        Mgrs string `json:"mgrs"`
+}
+
 func main() {
 	// fixie
 	fixieUrl, err := url.Parse(os.Getenv("FIXIE_URL"))
