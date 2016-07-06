@@ -102,7 +102,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println(string(body))
 
 		     
-                        err := json.Unmarshal(body, &geo)
+                        err := json.Unmarshal(string(body), &geo)
                         
 			//_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
 			_, err = bot.SendText([]string{content.From}, "Geo Results :" + geo)
