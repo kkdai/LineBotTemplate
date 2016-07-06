@@ -67,7 +67,7 @@ func main() {
 }
    
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
-        var geo ResultGeoLoc
+        var geo =new(ResultGeoLoc)
 	received, err := bot.ParseRequest(r)
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
