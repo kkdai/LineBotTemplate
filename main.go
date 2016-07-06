@@ -21,6 +21,7 @@ import (
 	"net/url"
   	"io/ioutil"
 	"github.com/line/line-bot-sdk-go/linebot"
+        "encoding/json"
 )
 
 var bot *linebot.Client
@@ -60,7 +61,7 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
 }
-   var geo GeoContent
+   
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	received, err := bot.ParseRequest(r)
 	if err != nil {
@@ -100,9 +101,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
   			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			log.Println(string(body))
-
-		     
-                        err := json.Unmarshal(string(body), &geo)
+                        
+                        var geo GeoContent
+                        err := json.Unmarshal([]byte(body), &geo)
                         
 			//_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
 			_, err = bot.SendText([]string{content.From}, "Geo Results :" + geo)
