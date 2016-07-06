@@ -102,7 +102,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println(string(body))
 
 		        var geo GeoContent
-                        _, err := json.Unmarshal(body, &geo)
+                        err := json.Unmarshal(body, &geo)
                         if err != nil {
 				log.Println(err)
 			}
