@@ -100,9 +100,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
   			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			log.Println(string(body))
-		
+
+		        var geo GeoContent
+                        _, err := json.Unmarshal(body, &geo)
+                        if err != nil {
+				log.Println(err)
+			}
 			//_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
-			_, err = bot.SendText([]string{content.From}, "Geo test :" + string(body))
+			_, err = bot.SendText([]string{content.From}, "Geo Results :" + geo.Mgrs)
 
 			if err != nil {
 				log.Println(err)
