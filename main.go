@@ -35,6 +35,14 @@ type GeoContent struct {
 type ResultGeoLoc struct {
 	Results GeoContent `json:"result"`
 }
+func getGeoLoc(body []byte) (*ResultGeoLoc, error) {
+    var s = new(ResultGeoLoc)
+    err := json.Unmarshal(body, &s)
+    if(err != nil){
+        fmt.Println("whoops:", err)
+    }
+    return s, err
+}
 
 func main() {
 	// fixie
@@ -67,7 +75,7 @@ func main() {
 }
    
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
-        var geo =new(ResultGeoLoc)
+        
 	received, err := bot.ParseRequest(r)
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
