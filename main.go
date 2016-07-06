@@ -21,7 +21,7 @@ import (
 	"net/url"
   	"io/ioutil"
 	"github.com/line/line-bot-sdk-go/linebot"
-        "encoding/json"
+        
 )
 
 var bot *linebot.Client
