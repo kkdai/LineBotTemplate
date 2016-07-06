@@ -60,7 +60,7 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
 }
-
+   var geo GeoContent
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	received, err := bot.ParseRequest(r)
 	if err != nil {
@@ -101,7 +101,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			body, err := ioutil.ReadAll(resp.Body)
 			log.Println(string(body))
 
-		        var geo GeoContent
+		     
                         err := json.Unmarshal(body, &geo)
                         if err != nil {
 				log.Println(err)
