@@ -26,6 +26,15 @@ import (
 
 var bot *linebot.Client
 
+type GeoContent struct {
+	LatLong string `json:"latLon"`
+	Utm string `json:"utm"`
+        Mgrs string `json:"mgrs"`
+}
+
+type ResultGeoLoc struct {
+	Results GeoContent `json:"result"`
+}
 
 func main() {
 	// fixie
