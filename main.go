@@ -104,7 +104,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
                         
                         var geo = new(GeoContent)
                         err := json.Unmarshal([]byte(body), &geo)
-                        
+                        if (err != nil) {
+    				println(err.Error())
+    				return
+  			}
+
 			//_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
 			_, err = bot.SendText([]string{content.From}, "Geo Results :" + string(geo))
 
