@@ -119,7 +119,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			//_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
 			//_, err = bot.SendText([]string{content.From}, "Geo Results :" + geo.Results.Mgrs)
     _, err := bot.NewMultipleMessage().
-        AddText("LatLong : " + geo.Results.LanLong).
+        AddText("LatLong : " + geo.Results.LatLong).
         AddText("Utm : " + geo.Results.Utm).
         AddText("Mgrs : " + geo.Results.Mgrs).
         Send([]string{content.From})
