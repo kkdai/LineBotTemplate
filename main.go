@@ -18,13 +18,48 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
+	"net/url"
+  	"io/ioutil"
 	"github.com/line/line-bot-sdk-go/linebot"
+        "encoding/json"  
 )
 
 var bot *linebot.Client
 
+type GeoContent struct {
+	LatLong string `json:"latLon"`
+	Utm string `json:"utm"`
+        Mgrs string `json:"mgrs"`
+}
+
+type ResultGeoLoc struct {
+	Results GeoContent `json:"result"`
+}
+func getGeoLoc(body []byte) (*ResultGeoLoc, error) {
+    var s = new(ResultGeoLoc)
+    err := json.Unmarshal(body, &s)
+    if(err != nil){
+        fmt.Println("whoops:", err)
+    }
+    return s, err
+}
+
 func main() {
+	// fixie
+	fixieUrl, err := url.Parse(os.Getenv("FIXIE_URL"))
+  	customClient := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(fixieUrl)}}
+  	resp, err := customClient.Get("http://welcome.usefixie.com")
+  	if (err != nil) {
+    		println(err.Error())
+    		return
+  	}
+  	defer resp.Body.Close()
+  	body, err := ioutil.ReadAll(resp.Body)
+  	println(string(body))
+	
+	// end fixie
+	
+	// line bot
 	strID := os.Getenv("ChannelID")
 	numID, err := strconv.ParseInt(strID, 10, 64)
 	if err != nil {
@@ -38,8 +73,9 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
 }
-
+   
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
+        
 	received, err := bot.ParseRequest(r)
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
@@ -51,12 +87,48 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, result := range received.Results {
 		content := result.Content()
+		log.Println("-->", content)
+
+		//Log detail receive content
+		if content != nil {
+			log.Println("RECEIVE Msg:", content.IsMessage, " OP:", content.IsOperation, " type:", content.ContentType, " from:", content.From, "to:", content.To, " ID:", content.ID)
+		}
+		/*
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
 			text, err := content.TextContent()
-			_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
+			_, err = bot.SendText([]string{content.From}, "Bot received : "+text.Text)
+
 			if err != nil {
+				log.Println(err)
+			}
+		}*/
+		if content != nil && content.ContentType == linebot.ContentTypeLocation {
+			loc, err := content.LocationContent()
+
+			// add eggyo geo test
+			resp, err := http.Get("http://eggyo-geo-node.herokuapp.com/geo/" + FloatToString(loc.Latitude) + "/" + FloatToString(loc.Longitude))
+			if (err != nil) {
+    				println(err.Error())
+    				return
+  			}
+  			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+                        log.Println(string(body))
+
+                        geo, err := getGeoLoc([]byte(body))
+			//_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
+			_, err = bot.SendText([]string{content.From}, "LatLong :" + geo.Results.LatLong)
+_, err = bot.SendText([]string{content.From}, "Utm :" + geo.Results.Utm)
+_, err = bot.SendText([]string{content.From}, "Mgrs :" + geo.Results.Mgrs)
+			
+                        
+                        if err != nil {
 				log.Println(err)
 			}
 		}
 	}
+}
+func FloatToString(input_num float64) string {
+    // to convert a float number to a string
+    return strconv.FormatFloat(input_num, 'f', 6, 64)
 }
