@@ -17,7 +17,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -25,13 +24,8 @@ import (
 var bot *linebot.Client
 
 func main() {
-	strID := os.Getenv("ChannelID")
-	numID, err := strconv.ParseInt(strID, 10, 64)
-	if err != nil {
-		log.Fatal("Wrong environment setting about ChannelID")
-	}
-
-	bot, err = linebot.NewClient(numID, os.Getenv("ChannelSecret"), os.Getenv("MID"))
+	var err error
+	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
 	http.HandleFunc("/callback", callbackHandler)
 	port := os.Getenv("PORT")
@@ -40,7 +34,8 @@ func main() {
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
-	received, err := bot.ParseRequest(r)
+	events, err := bot.ParseRequest(r)
+
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
 			w.WriteHeader(400)
@@ -49,13 +44,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	for _, result := range received.Results {
-		content := result.Content()
-		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
-			text, err := content.TextContent()
-			_, err = bot.SendText([]string{content.From}, "OK "+text.Text)
-			if err != nil {
-				log.Println(err)
+
+	for _, event := range events {
+		if event.Type == linebot.EventTypeMessage {
+			switch message := event.Message.(type) {
+			case *linebot.TextMessage:
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
+					log.Print(err)
+				}
 			}
 		}
 	}

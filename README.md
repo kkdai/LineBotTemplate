@@ -12,7 +12,7 @@ Installation and Usage
 
 ### 1. Got A Line Bot API devloper account
 
-[Make sure you already registered](https://business.line.me/services/products/4/introduction), if you need use Line Bot.
+[Make sure you already registered](https://business.line.me/zh-hant/services/bot), if you need use Line Bot.
 
 ### 2. Just Deploy the same on Heroku
 
@@ -22,53 +22,24 @@ Remember your heroku, ID.
 
 <br><br>
 
-### 3. Enable Fixed IP service
-
-![](images/linebotH2.png)
-Clone the heroku git to your locally, use follow command to setup ([Fixie](https://elements.heroku.com/addons/fixie)) service for free.
-
-#### There are two ways to add this "add-on" for heroku.
-
-![](images/linebotH1.png)
-
-1. Through heroku dashboard:
-	- Launch Herou [dashboard](https://dashboard.heroku.com)
-	- Go your deploy app page
-	- Go to "Resource"
-	- Go to "FIND MORE ADD-ONS" 
-	- Find "Fixie"
-
-2. Through [Heroku Toolbelt](https://toolbelt.heroku.com/)
-	- `$ heroku login`
-	- `$ heroku git:clone -a <YOUR_HEROKU_APP_ID>`
-	- `$ cd linebotkkdaitest`
-	- `$ heroku addons:create fixie:tricycle`
-
-Remember your IP information. 
-
-
-### 4. Back to Line Bot Dashboard, setup basic API
+### 3. Back to Line Bot Dashboard, setup basic API
 
 Setup your basic account information. Here is some info you will need to know.
 
 - `Callback URL`: https://{YOUR_HEROKU_SERVER_ID}.herokuapp.com:443/callback
 
-Go to `Server IP White List`, fill the IP from [Fixie](https://elements.heroku.com/addons/fixie)
-
 You will get following info, need fill back to Heroku.
 
-- Channel ID
 - Channel Secret
-- MID
+- Channel Access Token
 
-### 5. Back to Heroku again to setup environment variables
+### 4. Back to Heroku again to setup environment variables
 
 - Go to dashboard
 - Go to "Setting"
 - Go to "Config Variables", add following variables:
-	- "ChannelID"
 	- "ChannelSecret"
-	- "MID"
+	- "ChannelAccessToken"
 
 It all done.	
 
