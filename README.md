@@ -22,7 +22,7 @@ Remember your heroku, ID.
 
 <br><br>
 
-### 3. Back to Line Bot Dashboard, setup basic API
+### 3. Go to Line Bot Dashboard, setup basic API
 
 Setup your basic account information. Here is some info you will need to know.
 
