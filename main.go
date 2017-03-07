@@ -53,8 +53,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				sqlConnect(message.Text)
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
+				output := sqlConnect(message.Text)
+				// if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+output+" OK!")).Do(); err != nil {
 					log.Print(err)
 				}
 			}
@@ -71,10 +72,10 @@ func sqlConnect(currency string){
 	// rows, err := db.Query("SELECT * FROM $1 ORDER BY id DESC LIMIT 1;", currency)
 	rows, err := db.Query("SELECT * FROM "+currency+" ORDER BY id DESC LIMIT 1;")
 	checkErr(err)
-	
-	for rows.Next(){
-		fmt.Printf("123")
-	}
+	return rows
+	// for rows.Next(){
+		// output = "日幣現金賣出:"+rows.+""
+	// }
 }
 
 func checkErr(err error) {
