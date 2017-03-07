@@ -63,7 +63,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func sqlConnect(currency string){
+func sqlConnect(currency string)(output string){
 	// var output string
 	
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
@@ -80,7 +80,8 @@ func sqlConnect(currency string){
 	var datetime string
 	err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 	checkErr(err)
-	return cashsell
+	output := "日幣現金賣出:"cashsell+""
+	return
 	// for rows.Next(){
 		// output = "日幣現金賣出:"+rows.+""
 	// }
