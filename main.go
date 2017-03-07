@@ -18,6 +18,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 	"database/sql"
 	_ "github.com/lib/pq"
 	
@@ -84,12 +85,15 @@ func sqlConnect(currency string)(output string){
 	for rows.Next(){
 		err := rows.Scan(&cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 		checkErr(err)
+		layout := "2006-01-02T15:04:05.000Z"
+		t, err := time.Parse(layout, datetime)
+		// 2017-03-07 14:43:00
 		output = "台銀日幣即時匯率:"+
 					"\n 現金買入:"+strconv.FormatFloat(cashbuy, 'f', 4, 64)+
 					"\n 現金賣出:"+strconv.FormatFloat(cashsell, 'f', 4, 64)+
 					"\n 即期買入:"+strconv.FormatFloat(ratebuy, 'f', 4, 64)+
 					"\n 即期賣出:"+strconv.FormatFloat(ratesell, 'f', 4, 64)+
-					"\n 更新時間("+datetime+")"
+					"\n 更新時間("+t+")"
 	}
 	return
 }
