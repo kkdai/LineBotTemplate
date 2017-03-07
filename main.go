@@ -65,6 +65,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 func sqlConnect(currency string)(output string){
 	// var output string
+	var (
+		id int
+		cashbuy float32
+	)
 	
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	checkErr(err)
@@ -72,16 +76,18 @@ func sqlConnect(currency string)(output string){
 	// rows, err := db.Query("SELECT * FROM $1 ORDER BY id DESC LIMIT 1;", currency)
 	rows, err := db.Query("SELECT * FROM "+currency+" ORDER BY id DESC LIMIT 1;")
 	checkErr(err)
+	defer rows.Close()
 	for rows.Next(){
-		var id int
-		var cashbuy float32
-		var cashsell float32
-		var ratebuy float32
-		var ratesell float32
-		var datetime string
-		err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
+		// var id int
+		// var cashbuy float32
+		// var cashsell float32
+		// var ratebuy float32
+		// var ratesell float32
+		// var datetime string
+		// err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
+		err := rows.Scan(&id, &cashbuy)
 		checkErr(err)
-		output = "日幣現金賣出:"cashsell""
+		output = cashsell
 	}
 	return
 	// for rows.Next(){
