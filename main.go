@@ -87,7 +87,7 @@ func sqlConnect(currency string)(output string){
 		// err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 		err := rows.Scan(&id, &cashbuy)
 		checkErr(err)
-		output = cashsell
+		output = cashbuy
 	}
 	return
 	// for rows.Next(){
