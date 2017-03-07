@@ -67,7 +67,7 @@ func sqlConnect(currency string)(output string){
 	// var output string
 	var (
 		id int
-		cashbuy float32
+		cashbuy float64
 	)
 	
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
@@ -87,7 +87,7 @@ func sqlConnect(currency string)(output string){
 		// err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 		err := rows.Scan(&id, &cashbuy)
 		checkErr(err)
-		output = strconv.FormatFloat(cashbuy, 'f', 4, 32)
+		output = strconv.FormatFloat(cashbuy, 'f', 4, 64)
 	}
 	return
 	// for rows.Next(){
