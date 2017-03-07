@@ -17,7 +17,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	
+	"strconv"
 	"database/sql"
 	_ "github.com/lib/pq"
 	
@@ -63,7 +63,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func sqlConnect(currency string)(output float32){
+func sqlConnect(currency string)(output string){
 	// var output string
 	var (
 		id int
@@ -87,7 +87,7 @@ func sqlConnect(currency string)(output float32){
 		// err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 		err := rows.Scan(&id, &cashbuy)
 		checkErr(err)
-		output = cashbuy
+		output = strconv.FormatFloat(cashbuy, 'f', 4, 32)
 	}
 	return
 	// for rows.Next(){
