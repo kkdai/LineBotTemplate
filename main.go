@@ -80,7 +80,7 @@ func sqlConnect(currency string)(output string){
 	var datetime string
 	err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 	checkErr(err)
-	output := "日幣現金賣出:"cashsell+""
+	output = "日幣現金賣出:"cashsell+""
 	return
 	// for rows.Next(){
 		// output = "日幣現金賣出:"+rows.+""
