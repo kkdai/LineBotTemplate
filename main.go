@@ -85,10 +85,10 @@ func sqlConnect(currency string)(output string){
 		err := rows.Scan(&cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 		checkErr(err)
 		output = "現金買入:"+strconv.FormatFloat(cashbuy, 'f', 4, 64)+
-					"\\n 現金賣出:"+strconv.FormatFloat(cashsell, 'f', 4, 64)+
-					"\\n 即期買入:"+strconv.FormatFloat(ratebuy, 'f', 4, 64)+
-					"\\n 即期賣出:"+strconv.FormatFloat(ratesell, 'f', 4, 64)+
-					"\\n From 台灣銀行-"+datetime
+					"\n 現金賣出:"+strconv.FormatFloat(cashsell, 'f', 4, 64)+
+					"\n 即期買入:"+strconv.FormatFloat(ratebuy, 'f', 4, 64)+
+					"\n 即期賣出:"+strconv.FormatFloat(ratesell, 'f', 4, 64)+
+					"\n From 台灣銀行("+datetime+")"
 	}
 	return
 }
