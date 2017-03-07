@@ -17,8 +17,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	_ "github.com/lib/pq"
+	
 	"database/sql"
+	_ "github.com/lib/pq"
+	
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
