@@ -93,7 +93,7 @@ func sqlConnect(currency string)(output string){
 					"\n 現金賣出:"+strconv.FormatFloat(cashsell, 'f', 4, 64)+
 					"\n 即期買入:"+strconv.FormatFloat(ratebuy, 'f', 4, 64)+
 					"\n 即期賣出:"+strconv.FormatFloat(ratesell, 'f', 4, 64)+
-					"\n 更新時間("+t.Format(time.RFC822)+")"
+					"\n 更新時間("+t.Format("2006/01/02-15:04:05")+")"
 	}
 	return
 }
