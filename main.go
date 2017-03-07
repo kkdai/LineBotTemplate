@@ -62,9 +62,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func sqlConnect(currency string){
+	var output string
+	
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatal(err)
+	checkErr(err)
+	
+	rows, err := db.Query("SELECT * FROM ($1) ORDER BY id DESC LIMIT 1;", currency)
+	checkErr(err)
+	
+	for rows.Next(){
+		fmt.println(rows)
 	}
-	rows, err := db.Query("SELECT * FROM $c ORDER BY id DESC LIMIT 1;", currency)
+}
+
+func checkErr(err error) {
+    if err != nil {
+        log.Fatal(err)
+    }
 }
