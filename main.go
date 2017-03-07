@@ -75,7 +75,7 @@ func sqlConnect(currency string)(output string){
 	checkErr(err)
 	
 	// rows, err := db.Query("SELECT * FROM $1 ORDER BY id DESC LIMIT 1;", currency)
-	rows, err := db.Query("SELECT * FROM "+currency+" ORDER BY id DESC LIMIT 1;")
+	rows, err := db.Query("SELECT id, cashbuy FROM "+currency+" ORDER BY id DESC LIMIT 1;")
 	checkErr(err)
 	defer rows.Close()
 	for rows.Next(){
