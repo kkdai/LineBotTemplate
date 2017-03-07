@@ -63,7 +63,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func sqlConnect(currency string)(output string){
+func sqlConnect(currency string)(output float32){
 	// var output string
 	var (
 		id int
