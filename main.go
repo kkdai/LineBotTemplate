@@ -71,7 +71,7 @@ func sqlConnect(currency string){
 	checkErr(err)
 	
 	for rows.Next(){
-		fmt.println(rows)
+		fmt.Printf("%+v\n", rows)
 	}
 }
 
