@@ -85,7 +85,7 @@ func sqlConnect(currency string)(output string){
 	for rows.Next(){
 		err := rows.Scan(&cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 		checkErr(err)
-		layout := "2006-01-02T15:04:05.000Z"
+		layout := "2006-01-02 15:04:05"
 		t, err := time.Parse(layout, datetime)
 
 		output = "台銀日幣即時匯率:"+
