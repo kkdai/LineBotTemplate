@@ -55,7 +55,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				output := sqlConnect(message.Text)
 				// if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+output+" OK!")).Do(); err != nil {
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(output)).Do(); err != nil {
 					log.Print(err)
 				}
 			}
@@ -72,7 +72,15 @@ func sqlConnect(currency string){
 	// rows, err := db.Query("SELECT * FROM $1 ORDER BY id DESC LIMIT 1;", currency)
 	rows, err := db.Query("SELECT * FROM "+currency+" ORDER BY id DESC LIMIT 1;")
 	checkErr(err)
-	return rows
+	var id int
+	var cashbuy float32
+	var cashsell float32
+	var ratebuy float32
+	var ratesell float32
+	var datetime string
+	err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
+	checkErr(err)
+	output := "日幣現金賣出:"+cashsell+""
 	// for rows.Next(){
 		// output = "日幣現金賣出:"+rows.+""
 	// }
