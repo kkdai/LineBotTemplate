@@ -82,7 +82,7 @@ func sqlConnect(currency string)(output string){
 	checkErr(err)
 	defer rows.Close()
 	for rows.Next(){
-		err := rows.Scan(&cashbuy, &cashsell, &ratebuy, &ratesell, &string)
+		err := rows.Scan(&cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
 		checkErr(err)
 		output = "現金買入:"+strconv.FormatFloat(cashbuy, 'f', 4, 64)+
 					"\\n 現金賣出:"+strconv.FormatFloat(cashsell, 'f', 4, 64)+
