@@ -68,7 +68,8 @@ func sqlConnect(currency string){
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	checkErr(err)
 	
-	rows, err := db.Query("SELECT * FROM ($1) ORDER BY id DESC LIMIT 1;", currency)
+	// rows, err := db.Query("SELECT * FROM $1 ORDER BY id DESC LIMIT 1;", currency)
+	rows, err := db.Query("SELECT * FROM "+currency+" ORDER BY id DESC LIMIT 1;")
 	checkErr(err)
 	
 	for rows.Next(){
