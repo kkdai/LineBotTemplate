@@ -64,7 +64,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 func sqlConnect(currency string){
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
-		os.Fatal(err)
+		log.Fatal(err)
 	}
 	rows, err := db.Query("SELECT * FROM $c ORDER BY id DESC LIMIT 1;", currency)
 }
