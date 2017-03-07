@@ -72,15 +72,17 @@ func sqlConnect(currency string)(output string){
 	// rows, err := db.Query("SELECT * FROM $1 ORDER BY id DESC LIMIT 1;", currency)
 	rows, err := db.Query("SELECT * FROM "+currency+" ORDER BY id DESC LIMIT 1;")
 	checkErr(err)
-	var id int
-	var cashbuy float32
-	var cashsell float32
-	var ratebuy float32
-	var ratesell float32
-	var datetime string
-	err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
-	checkErr(err)
-	output = "日幣現金賣出:"cashsell""
+	for rows.Next(){
+		var id int
+		var cashbuy float32
+		var cashsell float32
+		var ratebuy float32
+		var ratesell float32
+		var datetime string
+		err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
+		checkErr(err)
+		output = "日幣現金賣出:"cashsell""
+	}
 	return
 	// for rows.Next(){
 		// output = "日幣現金賣出:"+rows.+""
