@@ -67,33 +67,30 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 func sqlConnect(currency string)(output string){
 	// var output string
 	var (
-		id int
 		cashbuy float64
+		cashsell float64
+		ratebuy float64
+		ratesell float64
+		datetime string
 	)
 	
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	checkErr(err)
 	
 	// rows, err := db.Query("SELECT * FROM $1 ORDER BY id DESC LIMIT 1;", currency)
-	rows, err := db.Query("SELECT id, cashbuy FROM "+currency+" ORDER BY id DESC LIMIT 1;")
+	rows, err := db.Query("SELECT cashbuy, cashsell, ratebuy, ratesell, datetime FROM "+currency+" ORDER BY id DESC LIMIT 1;")
 	checkErr(err)
 	defer rows.Close()
 	for rows.Next(){
-		// var id int
-		// var cashbuy float32
-		// var cashsell float32
-		// var ratebuy float32
-		// var ratesell float32
-		// var datetime string
-		// err = rows.Scan(&id, &cashbuy, &cashsell, &ratebuy, &ratesell, &datetime)
-		err := rows.Scan(&id, &cashbuy)
+		err := rows.Scan(&cashbuy, &cashsell, &ratebuy, &ratesell, &string)
 		checkErr(err)
-		output = strconv.FormatFloat(cashbuy, 'f', 4, 64)
+		output = "現金買入:"+strconv.FormatFloat(cashbuy, 'f', 4, 64)+
+					"\\n 現金賣出:"+strconv.FormatFloat(cashsell, 'f', 4, 64)+
+					"\\n 即期買入:"+strconv.FormatFloat(ratebuy, 'f', 4, 64)+
+					"\\n 即期賣出:"+strconv.FormatFloat(ratesell, 'f', 4, 64)+
+					"\\n From 台灣銀行-"+datetime
 	}
 	return
-	// for rows.Next(){
-		// output = "日幣現金賣出:"+rows.+""
-	// }
 }
 
 func checkErr(err error) {
