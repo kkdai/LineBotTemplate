@@ -1,4 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
+ï»¿// Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
@@ -57,7 +57,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					log.Print("message("+message.ID+"): "+ message.Text)
 				}
 			case *linebot.Sticker:
-				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("§A¦bµe¬Æ»òªF¦è°Ú¡H§Ú«ç»ò³£¬İ¤£À´¡H")).Do()
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("ä½ åœ¨ç•«ç”šéº¼æ±è¥¿å•Šï¼Ÿæˆ‘æ€éº¼éƒ½çœ‹ä¸æ‡‚ï¼Ÿ")).Do()
 			}
 		}
 	}
