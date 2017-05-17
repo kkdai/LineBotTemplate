@@ -51,17 +51,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				log.Print("TextMessage: ID(" + message.ID + "), Text(" + message.Text  + ")" )
+				log.Print("TextMessage: ID(" + message.ID + "), Text(" + message.Text  + "), current silent status=" + silent)
 				//if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
 				//	log.Print(err)
 				//}
-				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
 				if ":閉嘴" == message.Text {
 					silent = true;
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("...")).Do();
 				}
 				if ":說" == message.Text {
 					silent = false;
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("又可以說話了~~~")).Do();
 				}
+				if silent != true {
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
+				}				
 			case *linebot.ImageMessage :
 				log.Print("ImageMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
 				if silent != true {
