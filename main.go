@@ -85,7 +85,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.StickerMessage :
 				log.Print("StickerMessage: ID(" + message.ID + "), PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
 				if silent != true {
-					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("腳踏實地打字好嗎？傳這甚麼貼圖？")).Do();\
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("腳踏實地打字好嗎？傳這甚麼貼圖？")).Do();
 				}
 			}
 		}
