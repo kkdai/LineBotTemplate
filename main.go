@@ -49,19 +49,26 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				log.Print("event.Type: "+ event.Type)
+				log.Print("TextMessage: Type(" + message.Type + "), + Text (" + message.Text  + ") )
 				//if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
 				//	log.Print(err)
 				//}
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
-					log.Print("message("+message.ID+"): "+ message.Text)
-				}
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
 			case *linebot.ImageMessage :
+				log.Print("ImageMessage: Type(" + message.Type + "), + OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("傳這甚麼廢圖？你是長輩嗎？")).Do();
 			case *linebot.VideoMessage :
+				log.Print("VideoMessage: Type(" + message.Type + "), + OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("看甚麼影片，不知道流量快用光了嗎？")).Do();
 			case *linebot.AudioMessage :
+				log.Print("AudioMessage: Type(" + message.Type + "), + OriginalContentURL(" + message.OriginalContentURL + "), Duration(" + message.Duration + ")" )
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？")).Do();
 			case *linebot.LocationMessage:
+				log.Print("LocationMessage: Type(" + message.Type + "), + Title (" + message.Title  + "), Address(" + message.Address + "), Latitude(" + message.Latitude + ")", Longitude(" + message.Longitude + ")" )
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("這是哪裡啊？火星嗎？")).Do();
 			case *linebot.StickerMessage :
-				log.Print("Sticker message: PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
+				log.Print("StickerMessage: Type(" + message.Type + "), + PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("腳踏實地打字好嗎？傳這甚麼貼圖？")).Do();
 			}
 		}
 	}
