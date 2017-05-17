@@ -13,6 +13,7 @@
 package main
 
 import (
+	"strconv"
 	"fmt"
 	"log"
 	"net/http"
@@ -61,10 +62,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				log.Print("VideoMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
 				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("看甚麼影片，不知道流量快用光了嗎？")).Do();
 			case *linebot.AudioMessage :
-				log.Print("AudioMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), Duration(" + message.Duration + ")" )
+				log.Print("AudioMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), Duration(" + strconv.Itoa(message.Duration) + ")" )
 				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？")).Do();
 			case *linebot.LocationMessage:
-				log.Print("LocationMessage: ID(" + message.ID + "), Title(" + message.Title  + "), Address(" + message.Address + "), Latitude(" + message.Latitude + "), Longitude(" + message.Longitude + ")" )
+				log.Print("LocationMessage: ID(" + message.ID + "), Title(" + message.Title  + "), Address(" + message.Address + "), Latitude(" + strconv.Itoa(message.Latitude) + "), Longitude(" + strconv.Itoa(message.Longitude) + ")" )
 				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("這是哪裡啊？火星嗎？")).Do();
 			case *linebot.StickerMessage :
 				log.Print("StickerMessage: ID(" + message.ID + "), PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
