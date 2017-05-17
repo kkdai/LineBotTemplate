@@ -64,8 +64,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
 					log.Print("message("+message.ID+"): "+ message.Text)
 				}
-			case *"sticker":
-				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("你在畫甚麼東西啊？我怎麼都看不懂？")).Do()
 			}
 		}
 	}
