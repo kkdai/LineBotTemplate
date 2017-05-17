@@ -64,7 +64,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				log.Print("AudioMessage: Type(" + message.Type + "), OriginalContentURL(" + message.OriginalContentURL + "), Duration(" + message.Duration + ")" )
 				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？")).Do();
 			case *linebot.LocationMessage:
-				log.Print("LocationMessage: Type(" + message.Type + "), Title (" + message.Title  + "), Address(" + message.Address + "), Latitude(" + message.Latitude + ")", Longitude(" + message.Longitude + ")" )
+				log.Print("LocationMessage: Type(" + message.Type + "), Title(" + message.Title  + "), Address(" + message.Address + "), Latitude(" + message.Latitude + "), Longitude(" + message.Longitude + ")" )
 				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("這是哪裡啊？火星嗎？")).Do();
 			case *linebot.StickerMessage :
 				log.Print("StickerMessage: Type(" + message.Type + "), PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
