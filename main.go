@@ -47,23 +47,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
-			//MessageTypeText     MessageType = "text"
-			//MessageTypeImage    MessageType = "image"
-			//MessageTypeVideo    MessageType = "video"
-			//MessageTypeAudio    MessageType = "audio"
-			//MessageTypeLocation MessageType = "location"
-			//MessageTypeSticker  MessageType = "sticker"
-			//MessageTypeTemplate MessageType = "template"
-			//MessageTypeImagemap MessageType = "imagemap"
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				log.Print("event.Type: "+ event.Type + "("+ linebot.TextMessage +")")
+				log.Print("event.Type: "+ event.Type)
 				//if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
 				//	log.Print(err)
 				//}
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
 					log.Print("message("+message.ID+"): "+ message.Text)
 				}
+			case *linebot.ImageMessage :
+			case *linebot.VideoMessage :
+			case *linebot.AudioMessage :
+			case *linebot.LocationMessage:
+			case *linebot.StickerMessage :
+				log.Print("Sticker message: PackageId(" + message.PackageId + "), StickerId(" + message.StickerId + ")" )
 			}
 		}
 	}
