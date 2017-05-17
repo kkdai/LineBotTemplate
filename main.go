@@ -56,6 +56,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
 					log.Print("message("+message.ID+"): "+ message.Text)
 				}
+			case *linebot.Sticker:
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("礶或狥﹁摆и或常ぃ来")).Do(); err != nil {
+					log.Print("message("+message.ID+"): "+ message.Text)
+				}
 			}
 		}
 	}
