@@ -61,7 +61,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.AudioMessage :
 			case *linebot.LocationMessage:
 			case *linebot.StickerMessage :
-				log.Print("Sticker message: PackageId(" + message.PackageId + "), StickerId(" + message.StickerId + ")" )
+				log.Print("Sticker message: PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
 			}
 		}
 	}
