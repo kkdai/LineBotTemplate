@@ -64,27 +64,27 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			case *linebot.ImageMessage :
 				log.Print("ImageMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
-				if not silent {
+				if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("傳這甚麼廢圖？你是長輩嗎？")).Do();
 				}
 			case *linebot.VideoMessage :
 				log.Print("VideoMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
-				if not silent {
+				if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("看甚麼影片，不知道流量快用光了嗎？")).Do();
 				}
 			case *linebot.AudioMessage :
 				log.Print("AudioMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), Duration(" + strconv.Itoa(message.Duration) + ")" )
-				if not silent {
+				if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？")).Do();
 				}
 			case *linebot.LocationMessage:
 				log.Print("LocationMessage: ID(" + message.ID + "), Title(" + message.Title  + "), Address(" + message.Address + "), Latitude(" + strconv.FormatFloat(message.Latitude, 'f', -1, 64) + "), Longitude(" + strconv.FormatFloat(message.Longitude, 'f', -1, 64) + ")" )
-				if not silent {
+				if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("這是哪裡啊？火星嗎？")).Do();
 				}
 			case *linebot.StickerMessage :
 				log.Print("StickerMessage: ID(" + message.ID + "), PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
-				if not silent {
+				if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("腳踏實地打字好嗎？傳這甚麼貼圖？")).Do();\
 				}
 			}
