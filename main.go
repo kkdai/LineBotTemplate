@@ -55,13 +55,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				//if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
 				//	log.Print(err)
 				//}
-				if ":閉嘴" == message.Text {
+				if "你閉嘴" == message.Text {
 					silent = true;
-					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("...")).Do();
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("(X!)")).Do();
 				}
-				if ":說" == message.Text {
+				if "說吧" == message.Text {
 					silent = false;
-					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("又可以說話了~~~")).Do();
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do();
 				}
 				if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
