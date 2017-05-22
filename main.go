@@ -28,8 +28,10 @@ var alertInterval int;
 var bot *linebot.Client
 
 func tellTime(timeString string){
-	if silent != true {
-		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + timeString)).Do();
+	if timeString == "" {
+		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + time.Now())).Do();
+	} else if silent != true {
+		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("自動報時: " + timeString)).Do();
 	}				
 }
 
@@ -75,12 +77,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if "你閉嘴" == message.Text {
 					silent = true;
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("(X!)")).Do();
-				}
-				if "說吧" == message.Text {
+				} else if "說吧" == message.Text {
 					silent = false;
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do();
-				}
-				if silent != true {
+				} else if "現在幾點" == message.Text {
+					tellTime("");
+				} else if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
 				}				
 			case *linebot.ImageMessage :
