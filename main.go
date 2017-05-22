@@ -25,8 +25,10 @@ import (
 )
 
 var silent bool;
-var alertInterval int;
+var echoMap = make(map[string]bool);
+
 var bot *linebot.Client
+
 
 func tellTime(event *linebot.Event, timeString string){
 	if timeString == "" {
@@ -66,6 +68,22 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, event := range events {
+	
+		var eventSource = event.Source; //EventSource
+		var sourceId String;
+		sourceId := eventSource.GroupID;
+		if sourceId== nil {
+			sourceId := eventSource.RoomID
+		}
+		if sourceId != nil {
+			if v, ok := echoMap[sourceId]; ok {
+			} else {
+				log.Print("New routineDog added: " + sourceId)
+				echoMap[sourceId] = true
+				go routineDog(event)
+			}
+		}
+
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
@@ -113,6 +131,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("腳踏實地打字好嗎？傳這甚麼貼圖？")).Do();
 				}
 			}
+		} else if event.Type == linebot.EventTypePostback {
+		} else if event.Type == linebot.EventTypeBeacon {
 		}
 	}
 }
