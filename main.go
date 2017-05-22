@@ -28,9 +28,9 @@ var silent bool;
 var alertInterval int;
 var bot *linebot.Client
 
-func tellTime(event event,timeString string){
+func tellTime(event event, timeString string){
 	if timeString == "" {
-		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + time.Now())).Do();
+		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + time.Now()).Format("2006-01-02 15:04:05")).Do();
 	} else if silent != true {
 		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("自動報時: " + timeString)).Do();
 	}				
@@ -39,7 +39,7 @@ func tellTime(event event,timeString string){
 func routineDog(){
 	for {
 		time.Sleep(15 * 60 * 1000 * time.Millisecond) //time.Sleep(100 * time.Millisecond)
-		tellTime(time.Now());
+		tellTime(time.Now().Format("2006-01-02 15:04:05"));
 	}
 }
 
