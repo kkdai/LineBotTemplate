@@ -75,7 +75,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				//	log.Print(err)
 				//}
 				
-				log.Print("現在幾點 == " + message.Text + " is " +strconv.FormatBool("現在幾點" == message.Text))
+				//log.Print("現在幾點 == " + message.Text + " is " +strconv.FormatBool("現在幾點" == message.Text)) 
 				
 				if "你閉嘴" == message.Text {
 					silent = true;
