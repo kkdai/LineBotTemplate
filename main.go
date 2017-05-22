@@ -36,10 +36,10 @@ func tellTime(event *linebot.Event, timeString string){
 	}				
 }
 
-func routineDog(){
+func routineDog(event *linebot.Event){
 	for {
 		time.Sleep(15 * 60 * 1000 * time.Millisecond) //time.Sleep(100 * time.Millisecond)
-		tellTime(time.Now().Format("2006-01-02 15:04:05"));
+		tellTime(event, time.Now().Format("2006-01-02 15:04:05"));
 	}
 }
 
@@ -56,8 +56,6 @@ func main() {
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
 	
-	go routineDog()
-
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
 			w.WriteHeader(400)
@@ -85,7 +83,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					silent = false;
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do();
 				} else if "現在幾點" == message.Text {
-					tellTime("");
+					tellTime(event, "");
 				} else if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
 				}
