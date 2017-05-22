@@ -55,6 +55,19 @@ func main() {
 	http.ListenAndServe(addr, nil)
 }
 
+func getSourceId(source EventSource) {
+	var sourceId = source.UserID
+	log.Print("GroupID: " + UserID)
+	if sourceId == "" {
+		sourceId = source.GroupID
+		log.Print("GroupID: " + sourceId)
+	} else if sourceId == "" {
+		sourceId = source.RoomID
+		log.Print("RoomID: " + sourceId)
+	}
+	return source
+}
+
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
 	
@@ -70,12 +83,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	for _, event := range events {
 	
 		var eventSource = event.Source; //EventSource
-		var sourceId = eventSource.GroupID
-		log.Print("GroupID: " + sourceId)
-		if sourceId == "" {
-			sourceId = eventSource.RoomID
-			log.Print("RoomID: " + sourceId)
-		}
+		var sourceId = getSourceId(eventSource)
+
 		if sourceId != "" {
 			if _, ok := echoMap[sourceId]; ok {
 				//log.Print(sourceId + ": " + v)
