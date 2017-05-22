@@ -74,6 +74,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				//if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
 				//	log.Print(err)
 				//}
+				
+				log.Print("現在幾點 == " + message.Text + " is " +strconv.FormatBool("現在幾點" == message.Text))
+				
 				if "你閉嘴" == message.Text {
 					silent = true;
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("(X!)")).Do();
