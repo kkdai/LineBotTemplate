@@ -48,12 +48,12 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
-	
-	go routineDog()
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
+	
+	go routineDog()
 
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
