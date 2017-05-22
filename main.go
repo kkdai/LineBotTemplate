@@ -30,7 +30,7 @@ var bot *linebot.Client
 
 func tellTime(event event, timeString string){
 	if timeString == "" {
-		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + time.Now()).Format("2006-01-02 15:04:05")).Do();
+		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + time.Now().Format("2006-01-02 15:04:05"))).Do();
 	} else if silent != true {
 		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("自動報時: " + timeString)).Do();
 	}				
