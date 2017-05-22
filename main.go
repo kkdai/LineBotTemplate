@@ -57,7 +57,7 @@ func main() {
 
 func getSourceId(source EventSource) string {
 	var sourceId = source.UserID
-	log.Print("GroupID: " + UserID)
+	log.Print("UserID: " + sourceId)
 	if sourceId == "" {
 		sourceId = source.GroupID
 		log.Print("GroupID: " + sourceId)
