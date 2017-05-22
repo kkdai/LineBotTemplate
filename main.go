@@ -57,14 +57,27 @@ func main() {
 
 func getSourceId(source EventSource) string {
 	var sourceId = source.UserID
-	log.Print("UserID: " + sourceId)
-	if sourceId == "" {
-		sourceId = source.GroupID
-		log.Print("GroupID: " + sourceId)
-	} else if sourceId == "" {
-		sourceId = source.RoomID
-		log.Print("RoomID: " + sourceId)
+	if sourceId != "" {
+		log.Print("UserID: " + sourceId)
+	} else {
+		return sourceId
 	}
+
+	sourceId = source.GroupID
+	if sourceId != "" {
+		log.Print("GroupID: " + sourceId)
+	} else {
+		return sourceId
+	}
+
+	sourceId = source.RoomID
+	if sourceId != "" {
+		log.Print("RoomID: " + sourceId)
+	} else {
+		return sourceId
+	}
+
+	log.Print("Unknown source: " + sourceId)
 	return source
 }
 
