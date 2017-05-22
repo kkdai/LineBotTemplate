@@ -72,11 +72,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		var eventSource = event.Source; //EventSource
 		var sourceId = eventSource.GroupID
 		log.Print("GroupID: " + sourceId)
-		if sourceId == nil {
+		if sourceId == "" {
 			sourceId = eventSource.RoomID
 			log.Print("RoomID: " + sourceId)
 		}
-		if sourceId != nil {
+		if sourceId != "" {
 			if v, ok := echoMap[sourceId]; ok {
 			} else {
 				log.Print("New routineDog added: " + sourceId)
