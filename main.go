@@ -18,12 +18,27 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
 var silent bool;
+var alertInterval int;
 var bot *linebot.Client
+
+func tellTime(timeString string){
+	if silent != true {
+		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + timeString)).Do();
+	}				
+}
+
+func routineDog(){
+	for {
+		time.Sleep(15 * 60 * 1000 * time.Millisecond) //time.Sleep(100 * time.Millisecond)
+		tellTime(time.Now());
+	}
+}
 
 func main() {
 	var err error
@@ -33,6 +48,8 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
+	
+	go routineDog()
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
