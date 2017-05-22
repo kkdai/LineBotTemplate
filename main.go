@@ -55,7 +55,7 @@ func main() {
 	http.ListenAndServe(addr, nil)
 }
 
-func getSourceId(source EventSource) string {
+func getSourceId(source *linebot.EventSource) string {
 	var sourceId = source.UserID
 	if sourceId != "" {
 		log.Print("UserID: " + sourceId)
