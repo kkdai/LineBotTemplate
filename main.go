@@ -70,7 +70,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	for _, event := range events {
 	
 		var eventSource = event.Source; //EventSource
-		var sourceId := eventSource.GroupID;
+		var sourceId := eventSource.GroupID
 		log.Print("GroupID: " + sourceId)
 		if sourceId == nil {
 			sourceId := eventSource.RoomID
