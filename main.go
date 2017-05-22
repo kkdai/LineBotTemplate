@@ -9,7 +9,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+// https://github.com/line/line-bot-sdk-go/tree/master/linebot
+e
 package main
 
 import (
@@ -27,7 +28,7 @@ var silent bool;
 var alertInterval int;
 var bot *linebot.Client
 
-func tellTime(event events,timeString string){
+func tellTime(event event,timeString string){
 	if timeString == "" {
 		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + time.Now())).Do();
 	} else if silent != true {
@@ -87,7 +88,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					tellTime("");
 				} else if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
-				}				
+				}
 			case *linebot.ImageMessage :
 				log.Print("ImageMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
 				if silent != true {
