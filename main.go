@@ -27,7 +27,7 @@ var silent bool;
 var alertInterval int;
 var bot *linebot.Client
 
-func tellTime(timeString string){
+func tellTime(event events,timeString string){
 	if timeString == "" {
 		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("現在時間是: " + time.Now())).Do();
 	} else if silent != true {
@@ -91,7 +91,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.ImageMessage :
 				log.Print("ImageMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
 				if silent != true {
-					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("傳這甚麼廢圖？你是長輩嗎？")).Do();
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("傳這甚麼廢圖？你有認真在分享嗎？")).Do();
 				}
 			case *linebot.VideoMessage :
 				log.Print("VideoMessage: ID(" + message.ID + "), OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
