@@ -55,7 +55,7 @@ func main() {
 	http.ListenAndServe(addr, nil)
 }
 
-func getSourceId(source EventSource) {
+func getSourceId(source EventSource)(string) {
 	var sourceId = source.UserID
 	log.Print("GroupID: " + UserID)
 	if sourceId == "" {
