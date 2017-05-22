@@ -70,10 +70,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	for _, event := range events {
 	
 		var eventSource = event.Source; //EventSource
-		var sourceId String;
-		sourceId := eventSource.GroupID;
-		if sourceId== nil {
+		var sourceId := eventSource.GroupID;
+		log.Print("GroupID: " + sourceId)
+		if sourceId == nil {
 			sourceId := eventSource.RoomID
+			log.Print("RoomID: " + sourceId)
 		}
 		if sourceId != nil {
 			if v, ok := echoMap[sourceId]; ok {
