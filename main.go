@@ -77,7 +77,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			log.Print("RoomID: " + sourceId)
 		}
 		if sourceId != "" {
-			if v, ok := echoMap[sourceId]; ok {
+			if _, ok := echoMap[sourceId]; ok {
+				//log.Print(sourceId + ": " + v)
 			} else {
 				log.Print("New routineDog added: " + sourceId)
 				echoMap[sourceId] = true
