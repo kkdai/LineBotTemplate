@@ -39,7 +39,7 @@ func tellTime(replyToken string, timeString string){
 	}				
 }
 
-func routineDog(replyToken String) {
+func routineDog(replyToken string) {
 	for {
 		time.Sleep(15 * 60 * 1000 * time.Millisecond) //time.Sleep(100 * time.Millisecond)
 		log.Println("time to tell time to : " + replyToken + ", " + time.Now().Format("2006-01-02 15:04:05"))
