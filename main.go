@@ -26,6 +26,7 @@ import (
 )
 
 var silent bool = false
+var timeFormat = "2017/05/23 23:59:59"
 var tellTimeInterval int = 15
 var echoMap = make(map[string]bool)
 
@@ -35,7 +36,7 @@ var bot *linebot.Client
 
 func tellTime(replyToken string, doTell bool){
 	now := time.Now().In(loc)
-	nowString := now.Format("2006-01-01 15:04:05")
+	nowString := now.Format(timeFormat)
 	
 	if doTell {
 		log.Println("現在時間(台北): " + nowString)
@@ -52,7 +53,7 @@ func routineDog(sourceId string) {
 	for {
 		time.Sleep(time.Duration(tellTimeInterval) * time.Minute)
 		now := time.Now().In(loc)
-		log.Println("time to tell time to : " + sourceId + ", " + now.Format("2006-01-02 15:04:05"))
+		log.Println("time to tell time to : " + sourceId + ", " + now.Format(timeFormat))
 		tellTime(sourceId, false)
 	}
 }
@@ -61,7 +62,7 @@ func main() {
 	go func() {
 		for {
 			now := time.Now().In(loc)
-			log.Println("keep alive at : " + now.Format("2006-01-02 15:04:05"))
+			log.Println("keep alive at : " + now.Format(timeFormat))
 			http.Get("https://line-talking-bot-go.herokuapp.com")
 			time.Sleep(5 * time.Minute)
 		}
