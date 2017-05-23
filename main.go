@@ -31,11 +31,16 @@ var echoMap = make(map[string]bool);
 var bot *linebot.Client
 
 
-func tellTime(replyToken string, timeString string){
-	if timeString == "" {
-		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間是: " + time.Now().Format("2006-01-02 15:04:05"))).Do();
+func tellTime(replyToken string, doTell bool){
+	var now = time.Now();
+	now.Add(8*60*60*1000);
+	
+	nowString := now.Format("2006-01-01 15:04:05")
+	
+	if doTell {
+		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間: " + nowString)).Do();
 	} else if silent != true {
-		bot.ReplyMessage(replyToken, linebot.NewTextMessage("自動報時: " + timeString)).Do();
+		bot.ReplyMessage(replyToken, linebot.NewTextMessage("自動報時: " + nowString)).Do();
 	}				
 }
 
@@ -125,7 +130,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					silent = false;
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do();
 				} else if strings.ContainsAny(message.Text, "現在幾點")  {
-					tellTime(replyToken, "");
+					tellTime(replyToken, true);
 				} else if silent != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
 				}
