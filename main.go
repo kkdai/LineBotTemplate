@@ -29,13 +29,13 @@ var silent bool = false
 var tellTimeInterval int = 15
 var echoMap = make(map[string]bool)
 
+var loc, _ := time.LoadLocation("Asia/Taipei")
+var	now = time.Now().In(loc)
+
 var bot *linebot.Client
 
 
 func tellTime(replyToken string, doTell bool){
-	loc, _ := time.LoadLocation("Asia/Taipei")
-	//set timezone,  
-	now := time.Now().In(loc)
 	nowString := now.Format("2006-01-01 15:04:05")
 	
 	if doTell {
@@ -52,7 +52,7 @@ func tellTime(replyToken string, doTell bool){
 func routineDog(sourceId string) {
 	for {
 		time.Sleep(time.Duration(tellTimeInterval) * time.Minute)
-		log.Println("time to tell time to : " + sourceId + ", " + time.Now().Format("2006-01-02 15:04:05"))
+		log.Println("time to tell time to : " + sourceId + ", " + now.Format("2006-01-02 15:04:05"))
 		tellTime(sourceId, false)
 	}
 }
@@ -65,6 +65,15 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
+	
+	go routineDog(sourceId)
+	go keepAlive() {
+		for {
+			time.Sleep(5 * time.Minute)
+			log.Println("keep alive at : " + now.Format("2006-01-02 15:04:05"))
+			http.get("http://line-talking-bot-go.herokuapp.com");
+		}
+	}
 }
 
 func getSourceId(event *linebot.Event) string {
