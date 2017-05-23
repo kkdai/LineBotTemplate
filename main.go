@@ -32,9 +32,9 @@ var bot *linebot.Client
 
 
 func tellTime(replyToken string, doTell bool){
-	var now = time.Now();
-	now.Add(8*60*60*1000);
-	
+	loc, _ := time.LoadLocation("Asia/Taipei")
+	//set timezone,  
+	now := time.Now().In(zone)
 	nowString := now.Format("2006-01-01 15:04:05")
 	
 	if doTell {
