@@ -72,7 +72,7 @@ func main() {
 			log.Println("keep alive at : " + now.Format("2006-01-02 15:04:05"))
 			http.get("http://line-talking-bot-go.herokuapp.com");
 		}
-	}
+	}()
 }
 
 func getSourceId(event *linebot.Event) string {
