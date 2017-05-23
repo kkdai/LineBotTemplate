@@ -39,10 +39,14 @@ func tellTime(replyToken string, doTell bool){
 	nowString := now.Format("2006-01-01 15:04:05")
 	
 	if doTell {
+		log.Println("現在時間(台北): " + nowString)
 		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間(台北): " + nowString)).Do()
 	} else if silent != true {
+		log.Println("自動報時(台北): " + nowString)
 		bot.ReplyMessage(replyToken, linebot.NewTextMessage("自動報時(台北): " + nowString)).Do()
-	}				
+	} else {
+		log.Println("tell time misfired")
+	}
 }
 
 func routineDog(replyToken string) {
