@@ -26,7 +26,7 @@ import (
 )
 
 var silent bool = false
-var timeFormat = "2017/05/23 23:59:59"
+var timeFormat = "2006/01/01 15:04:05"
 var tellTimeInterval int = 15
 var echoMap = make(map[string]bool)
 
@@ -75,7 +75,7 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
-	
+
 }
 
 func getSourceId(event *linebot.Event) string {
@@ -100,6 +100,10 @@ func getSourceId(event *linebot.Event) string {
 
 	log.Print("Unknown source: " + sourceId)
 	return sourceId
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
