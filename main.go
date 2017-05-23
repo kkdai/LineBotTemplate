@@ -133,7 +133,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				//	log.Print(err)
 				//}
 				
-				if strings.ContainsAny(message.Text, "你閉嘴") {
+				if strings.Contains(message.Text, "你閉嘴") {
 					silent = true
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("QQ")).Do()
 				} else if "說吧" == message.Text {
@@ -143,7 +143,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					tellTimeInterval = 1					
 				} else if "time15" == message.Text {
 					tellTimeInterval = 15
-				} else if strings.ContainsAny(message.Text, "現在幾點")  {
+				} else if strings.Contains(message.Text, "現在幾點")  {
 					tellTime(replyToken, true)
 				} else if silent != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do()
