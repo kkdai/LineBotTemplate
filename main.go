@@ -56,7 +56,7 @@ func main() {
 }
 
 func getSourceId string (event *linebot.Event){
-	var source = event.Source; //EventSource
+	var source = event.Source //EventSource
 	var sourceId = source.UserID
 	if sourceId != "" {
 		log.Print("UserID: " + sourceId)
