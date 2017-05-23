@@ -25,7 +25,7 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
-silent bool := false;
+silent := false;
 tellTimeInterval := 15;
 echoMap := make(map[string]bool);
 
