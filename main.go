@@ -43,17 +43,17 @@ func tellTime(replyToken string, doTell bool){
 		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間(台北): " + nowString)).Do()
 	} else if silent != true {
 		log.Println("自動報時(台北): " + nowString)
-		bot.ReplyMessage(replyToken, linebot.NewTextMessage("自動報時(台北): " + nowString)).Do()
+		bot.PushMessage(replyToken, linebot.NewTextMessage("自動報時(台北): " + nowString)).Do()
 	} else {
 		log.Println("tell time misfired")
 	}
 }
 
-func routineDog(replyToken string) {
+func routineDog(sourceId string) {
 	for {
 		time.Sleep(time.Duration(tellTimeInterval) * time.Minute)
-		log.Println("time to tell time to : " + replyToken + ", " + time.Now().Format("2006-01-02 15:04:05"))
-		tellTime(replyToken, false)
+		log.Println("time to tell time to : " + sourceId + ", " + time.Now().Format("2006-01-02 15:04:05"))
+		tellTime(sourceId, false)
 	}
 }
 
@@ -114,7 +114,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				log.Print("New routineDog added: " + sourceId)
 				echoMap[sourceId] = true
-				go routineDog(replyToken)
+				go routineDog(sourceId)
 			}
 		}
 
