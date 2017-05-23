@@ -34,13 +34,13 @@ var bot *linebot.Client
 func tellTime(replyToken string, doTell bool){
 	loc, _ := time.LoadLocation("Asia/Taipei")
 	//set timezone,  
-	now := time.Now().In(zone)
+	now := time.Now().In(loc)
 	nowString := now.Format("2006-01-01 15:04:05")
 	
 	if doTell {
-		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間: " + nowString)).Do();
+		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間(台北): " + nowString)).Do();
 	} else if silent != true {
-		bot.ReplyMessage(replyToken, linebot.NewTextMessage("自動報時: " + nowString)).Do();
+		bot.ReplyMessage(replyToken, linebot.NewTextMessage("自動報時(台北): " + nowString)).Do();
 	}				
 }
 
