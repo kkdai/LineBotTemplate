@@ -140,6 +140,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					tellTime(replyToken, true)
 				} else if silent != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("> //////////////////// <")).Do()
 				}
 			case *linebot.ImageMessage :
 				log.Print("ReplyToken[" + replyToken + "] ImageMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
