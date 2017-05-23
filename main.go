@@ -79,7 +79,7 @@ func getSourceId(event *linebot.Event) string {
 	}
 
 	log.Print("Unknown source: " + sourceId)
-	return source
+	return sourceId
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
