@@ -67,9 +67,9 @@ func main() {
 	
 	go func() {
 		for {
-			time.Sleep(5 * time.Minute)
 			log.Println("keep alive at : " + now.Format("2006-01-02 15:04:05"))
 			http.Get("https://line-talking-bot-go.herokuapp.com")
+			time.Sleep(5 * time.Minute)
 		}
 	}()
 }
