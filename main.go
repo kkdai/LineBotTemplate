@@ -65,12 +65,11 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
 	
-	go routineDog(sourceId)
 	go func() {
 		for {
 			time.Sleep(5 * time.Minute)
 			log.Println("keep alive at : " + now.Format("2006-01-02 15:04:05"))
-			http.get("http://line-talking-bot-go.herokuapp.com");
+			http.get("https://line-talking-bot-go.herokuapp.com");
 		}
 	}()
 }
