@@ -55,7 +55,8 @@ func main() {
 	http.ListenAndServe(addr, nil)
 }
 
-func getSourceId(source *linebot.EventSource) string {
+func getSourceId string (event *linebot.Event){
+	var source = event.Source; //EventSource
 	var sourceId = source.UserID
 	if sourceId != "" {
 		log.Print("UserID: " + sourceId)
@@ -95,8 +96,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 	
-		var eventSource = event.Source; //EventSource
-		var sourceId = getSourceId(eventSource)
+		var sourceId = getSourceId(event)
 
 		if sourceId != "" {
 			if _, ok := echoMap[sourceId]; ok {
