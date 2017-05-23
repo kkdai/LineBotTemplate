@@ -19,6 +19,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -118,13 +119,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				
 				//log.Print("現在幾點 == " + message.Text + " is " +strconv.FormatBool("現在幾點" == message.Text)) 
 				
-				if "你閉嘴" == message.Text {
+				if strings.ContainsAny(message.Text, "你閉嘴") {
 					silent = true;
-					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("(X!)")).Do();
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("QQ")).Do();
 				} else if "說吧" == message.Text {
 					silent = false;
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do();
-				} else if "現在幾點" == message.Text {
+				} else if strings.ContainsAny(message.Text, "現在幾點")  {
 					tellTime(event, "");
 				} else if silent != true {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
