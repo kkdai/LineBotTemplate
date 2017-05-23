@@ -25,9 +25,9 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
-silent := false;
-tellTimeInterval := 15;
-echoMap := make(map[string]bool);
+var silent bool = false
+var tellTimeInterval int = 15
+var echoMap = make(map[string]bool)
 
 var bot *linebot.Client
 
@@ -39,9 +39,9 @@ func tellTime(replyToken string, doTell bool){
 	nowString := now.Format("2006-01-01 15:04:05")
 	
 	if doTell {
-		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間(台北): " + nowString)).Do();
+		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間(台北): " + nowString)).Do()
 	} else if silent != true {
-		bot.ReplyMessage(replyToken, linebot.NewTextMessage("自動報時(台北): " + nowString)).Do();
+		bot.ReplyMessage(replyToken, linebot.NewTextMessage("自動報時(台北): " + nowString)).Do()
 	}				
 }
 
@@ -49,7 +49,7 @@ func routineDog(replyToken string) {
 	for {
 		time.Sleep(tellTimeInterval * time.Minute) //time.Sleep(100 * time.Millisecond)
 		log.Println("time to tell time to : " + replyToken + ", " + time.Now().Format("2006-01-02 15:04:05"))
-		tellTime(replyToken, false);
+		tellTime(replyToken, false)
 	}
 }
 
@@ -123,44 +123,44 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				//}
 				
 				if strings.ContainsAny(message.Text, "你閉嘴") {
-					silent = true;
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("QQ")).Do();
+					silent = true
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("QQ")).Do()
 				} else if "說吧" == message.Text {
-					silent = false;
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do();
+					silent = false
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do()
 				} else if "time1" == message.Text {
-					tellTimeInterval = 1;					
+					tellTimeInterval = 1					
 				} else if "time15" == message.Text {
-					tellTimeInterval = 15;
+					tellTimeInterval = 15
 				} else if strings.ContainsAny(message.Text, "現在幾點")  {
-					tellTime(replyToken, true);
+					tellTime(replyToken, true)
 				} else if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do();
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do()
 				}
 			case *linebot.ImageMessage :
 				log.Print("ReplyToken[" + replyToken + "] ImageMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("傳這甚麼廢圖？你有認真在分享嗎？")).Do();
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("傳這甚麼廢圖？你有認真在分享嗎？")).Do()
 				}
 			case *linebot.VideoMessage :
 				log.Print("ReplyToken[" + replyToken + "] VideoMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("看甚麼影片，不知道流量快用光了嗎？")).Do();
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("看甚麼影片，不知道流量快用光了嗎？")).Do()
 				}
 			case *linebot.AudioMessage :
 				log.Print("ReplyToken[" + replyToken + "] AudioMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), Duration(" + strconv.Itoa(message.Duration) + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？")).Do();
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？")).Do()
 				}
 			case *linebot.LocationMessage:
 				log.Print("ReplyToken[" + replyToken + "] LocationMessage[" + message.ID + "] Title(" + message.Title  + "), Address(" + message.Address + "), Latitude(" + strconv.FormatFloat(message.Latitude, 'f', -1, 64) + "), Longitude(" + strconv.FormatFloat(message.Longitude, 'f', -1, 64) + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("這是哪裡啊？火星嗎？")).Do();
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("這是哪裡啊？火星嗎？")).Do()
 				}
 			case *linebot.StickerMessage :
 				log.Print("ReplyToken[" + replyToken + "] StickerMessage[" + message.ID + "] PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("腳踏實地打字好嗎？傳這甚麼貼圖？")).Do();
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("腳踏實地打字好嗎？傳這甚麼貼圖？")).Do()
 				}
 			}
 		} else if event.Type == linebot.EventTypePostback {
