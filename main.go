@@ -108,6 +108,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
+	log.Print("URL:"  + r.URL.String())
 	
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
