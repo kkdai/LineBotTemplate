@@ -38,7 +38,7 @@ func tellTime(event *linebot.Event, timeString string){
 	}				
 }
 
-func routineDog(event *linebot.Event){
+func routineDog(event *linebot.Event) {
 	for {
 		time.Sleep(15 * 60 * 1000 * time.Millisecond) //time.Sleep(100 * time.Millisecond)
 		tellTime(event, time.Now().Format("2006-01-02 15:04:05"));
@@ -55,7 +55,7 @@ func main() {
 	http.ListenAndServe(addr, nil)
 }
 
-func getSourceId string (event *linebot.Event){
+func getSourceId(event *linebot.Event) string {
 	var source = event.Source //EventSource
 	var sourceId = source.UserID
 	if sourceId != "" {
