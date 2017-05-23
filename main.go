@@ -29,9 +29,8 @@ var silent bool = false
 var tellTimeInterval int = 15
 var echoMap = make(map[string]bool)
 
-var loc, _ := time.LoadLocation("Asia/Taipei")
+var loc, _ = time.LoadLocation("Asia/Taipei")
 var	now = time.Now().In(loc)
-
 var bot *linebot.Client
 
 
@@ -67,7 +66,7 @@ func main() {
 	http.ListenAndServe(addr, nil)
 	
 	go routineDog(sourceId)
-	go keepAlive() {
+	go func() {
 		for {
 			time.Sleep(5 * time.Minute)
 			log.Println("keep alive at : " + now.Format("2006-01-02 15:04:05"))
