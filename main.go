@@ -57,6 +57,14 @@ func routineDog(sourceId string) {
 }
 
 func main() {
+	go func() {
+		for {
+			log.Println("keep alive at : " + now.Format("2006-01-02 15:04:05"))
+			http.Get("https://line-talking-bot-go.herokuapp.com")
+			time.Sleep(5 * time.Minute)
+		}
+	}()
+
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
@@ -65,13 +73,6 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
 	
-	go func() {
-		for {
-			log.Println("keep alive at : " + now.Format("2006-01-02 15:04:05"))
-			http.Get("https://line-talking-bot-go.herokuapp.com")
-			time.Sleep(5 * time.Minute)
-		}
-	}()
 }
 
 func getSourceId(event *linebot.Event) string {
