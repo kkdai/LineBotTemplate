@@ -104,7 +104,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				log.Print("New routineDog added: " + sourceId)
 				echoMap[sourceId] = true
-				go routineDog(event)
+				go routineDog(replyToken)
 			}
 		}
 
