@@ -61,21 +61,18 @@ func getSourceId(event *linebot.Event) string {
 	var sourceId = source.UserID
 	if sourceId != "" {
 		log.Print("source UserID: " + sourceId)
-	} else {
 		return sourceId
 	}
 
 	sourceId = source.GroupID
 	if sourceId != "" {
 		log.Print("source GroupID: " + sourceId)
-	} else {
 		return sourceId
 	}
 
 	sourceId = source.RoomID
 	if sourceId != "" {
 		log.Print("source RoomID: " + sourceId)
-	} else {
 		return sourceId
 	}
 
