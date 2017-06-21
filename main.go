@@ -17,6 +17,7 @@ import (
 	"strconv"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
@@ -26,6 +27,8 @@ import (
 )
 
 var silent bool = false
+var silentMap = make(map[string]bool)
+
 var timeFormat = "2006/01/01 15:04:05"
 var tellTimeInterval int = 15
 var echoMap = make(map[string]bool)
@@ -33,6 +36,22 @@ var echoMap = make(map[string]bool)
 var loc, _ = time.LoadLocation("Asia/Taipei")
 var bot *linebot.Client
 
+var answers = []string{
+		"嗯嗯，呵呵，我要去洗澡了",
+		"在非洲，每六十秒，就有一分鐘過去",
+		"凡是每天喝水的人，有高機率在100年內死去",
+		"每呼吸60秒，就減少一分鐘的壽命",
+		"當你吃下吃下廿碗白飯，換算竟相當於吃下了二十碗白飯的熱量",
+		"誰能想的到，這名16歲少女，在四年前，只是一名12歲少女",
+		"台灣人在睡覺時，大多數的美國人都在工作",
+		"當蝴蝶在南半球拍了兩下翅膀，牠就會稍微飛高一點點",
+		"據統計，未婚生子的人數中有高機率為女性",
+		"只要每天省下買一杯奶茶的錢，十天後就能買十杯奶茶",
+		"當你的左臉被人打，那你的左臉就會痛",
+		"今年中秋節剛好是滿月、今年七夕恰逢鬼月、今年母親節正好是星期日",
+		"人被殺，就會死。",
+		"台灣競爭力低落，在美國就連小學生都會說流利的英語",
+	}
 
 func tellTime(replyToken string, doTell bool){
 	now := time.Now().In(loc)
@@ -51,7 +70,7 @@ func tellTime(replyToken string, doTell bool){
 
 func routineDog(sourceId string) {
 	for {
-		time.Sleep(time.Duration(tellTimeInterval) * time.Minute)
+		time.Sleep(time.Duration(rand.Intn(len(tellTimeInterval)) * time.Minute)
 		now := time.Now().In(loc)
 		log.Println("time to tell time to : " + sourceId + ", " + now.Format(timeFormat))
 		tellTime(sourceId, false)
@@ -64,10 +83,12 @@ func main() {
 			now := time.Now().In(loc)
 			log.Println("keep alive at : " + now.Format(timeFormat))
 			http.Get("https://line-talking-bot-go.herokuapp.com")
-			time.Sleep(5 * time.Minute)
+			time.Sleep(rand.Intn(len(tellTimeInterval)) * time.Minute)
 		}
 	}()
 
+	rand.Seed(time.Now().UnixNano())
+	
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
@@ -155,8 +176,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if strings.Contains(message.Text, "現在幾點")  {
 					tellTime(replyToken, true)
 				} else if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("嗯嗯，呵呵，我要去洗澡了")).Do()
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("> //////////////////// <")).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers[rand.Intn(len(answers))])).Do()
 				}
 			case *linebot.ImageMessage :
 				log.Print("ReplyToken[" + replyToken + "] ImageMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
