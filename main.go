@@ -70,7 +70,7 @@ func tellTime(replyToken string, doTell bool){
 
 func routineDog(sourceId string) {
 	for {
-		time.Sleep(time.Duration(rand.Intn(len(tellTimeInterval))) * time.Minute)
+		time.Sleep(time.Duration(rand.Intn(tellTimeInterval)) * time.Minute)
 		now := time.Now().In(loc)
 		log.Println("time to tell time to : " + sourceId + ", " + now.Format(timeFormat))
 		tellTime(sourceId, false)
@@ -78,16 +78,17 @@ func routineDog(sourceId string) {
 }
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	go func() {
 		for {
 			now := time.Now().In(loc)
 			log.Println("keep alive at : " + now.Format(timeFormat))
 			http.Get("https://line-talking-bot-go.herokuapp.com")
-			time.Sleep(rand.Intn(len(tellTimeInterval)) * time.Minute)
+			time.Sleep(rand.Intn(tellTimeInterval) * time.Minute)
 		}
 	}()
 
-	rand.Seed(time.Now().UnixNano())
 	
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
