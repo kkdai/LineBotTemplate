@@ -70,7 +70,7 @@ func tellTime(replyToken string, doTell bool){
 
 func routineDog(sourceId string) {
 	for {
-		time.Sleep(time.Duration(rand.Intn(len(tellTimeInterval)) * time.Minute)
+		time.Sleep(time.Duration(rand.Intn(len(tellTimeInterval))) * time.Minute)
 		now := time.Now().In(loc)
 		log.Println("time to tell time to : " + sourceId + ", " + now.Format(timeFormat))
 		tellTime(sourceId, false)
