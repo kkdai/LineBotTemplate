@@ -29,7 +29,7 @@ import (
 var silent bool = false
 var silentMap = make(map[string]bool)
 
-var timeFormat = "2006/01/01 15:04:05"
+var timeFormat = "01/02 03:04:05PM '06 -0700"
 var tellTimeInterval int = 15
 var echoMap = make(map[string]bool)
 
@@ -54,6 +54,7 @@ var answers = []string{
 	}
 
 func tellTime(replyToken string, doTell bool){
+
 	now := time.Now().In(loc)
 	nowString := now.Format(timeFormat)
 	
@@ -70,7 +71,7 @@ func tellTime(replyToken string, doTell bool){
 
 func routineDog(sourceId string) {
 	for {
-		time.Sleep(time.Duration(rand.Intn(tellTimeInterval)) * time.Minute)
+		time.Sleep(time.Duration(tellTimeInterval) * time.Minute)
 		now := time.Now().In(loc)
 		log.Println("time to tell time to : " + sourceId + ", " + now.Format(timeFormat))
 		tellTime(sourceId, false)
@@ -78,8 +79,6 @@ func routineDog(sourceId string) {
 }
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
-
 	go func() {
 		for {
 			now := time.Now().In(loc)
@@ -89,6 +88,7 @@ func main() {
 		}
 	}()
 
+	rand.Seed(time.Now().UnixNano())
 	
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
@@ -170,10 +170,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if "說吧" == message.Text {
 					silent = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do()
-				} else if "time1" == message.Text {
-					tellTimeInterval = 1					
-				} else if "time15" == message.Text {
-					tellTimeInterval = 15
 				} else if strings.Contains(message.Text, "現在幾點")  {
 					tellTime(replyToken, true)
 				} else if silent != true {
