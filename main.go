@@ -86,7 +86,7 @@ func main() {
 			now := time.Now().In(loc)
 			log.Println("keep alive at : " + now.Format(timeFormat))
 			http.Get("https://line-talking-bot-go.herokuapp.com")
-			time.Sleep(time.Duration(rand.Intn(tellTimeInterval) * time.Minute))
+			time.Sleep(time.Duration(rand.Int31n(59)) * time.Minute)
 		}
 	}()
 	
