@@ -180,7 +180,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if strings.Contains(message.Text, "你閉嘴") {
 					silentMap[sourceId] = true
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("QQ")).Do()
-				} else if strings.Contains(message.Text, "現在幾點")  {
+				} else if strings.Contains(message.Text, "現在幾點") {
 					tellTime(replyToken, true)
 				} else if "說吧" == message.Text {
 					silentMap[sourceId] = false
@@ -188,13 +188,18 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if "profile" == message.Text {
 					if source.UserID != "" {
 						profile, err := bot.GetProfile(source.UserID).Do()
+						if err != nil {
+							bot.ReplyMessage(replyToken, err.Error()).Do()
+						}
 						if _, err := bot.ReplyMessage(
 							replyToken,
 							linebot.NewTextMessage("Display name: "+profile.DisplayName),
 							linebot.NewTextMessage("Status message: "+profile.StatusMessage),
-						).Do()
+						).Do(); err != nil {
+							bot.ReplyMessage(replyToken, err.Error()).Do()
+						}
 					} else {
-						bot.ReplyMessage(replyToken, linebot.NewTextMessage("Bot can't use profile API without user ID")).Do()
+						return bot.ReplyMessage(replyToken, "Bot can't use profile API without user ID").Do()
 					}
 				} else if "buttons" == message.Text {
 					imageURL := bot.appBaseURL + "/static/buttons/1040.jpg"
