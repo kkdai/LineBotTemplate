@@ -178,8 +178,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		
-		var silent bool = false
-
 		if event.Type == linebot.EventTypeMessage {
 			_, silent := silentMap[sourceId]
 			
