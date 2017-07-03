@@ -163,7 +163,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		var replyToken = event.ReplyToken
-		
+
+		var source = event.Source //EventSource		
 		var userId = source.UserID
 		var groupId = source.GroupID
 		var roomId = source.RoomID
