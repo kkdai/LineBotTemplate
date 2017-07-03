@@ -170,6 +170,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		var roomId = source.RoomID
 		log.Print("callbackHandler to source UserID/GroupID/RoomID: " + userId + "/" + groupId + "/" + roomId)
 		
+		sourceId = roomId
+		if sourceId == "" {
+			sourceId = groupId
+			if sourceId == "" {
+				sourceId = userId
+			}
+		}
+		
 		var silent bool = false
 
 		if event.Type == linebot.EventTypeMessage {
@@ -183,10 +191,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				//}
 				
 				if strings.Contains(message.Text, "你閉嘴") {
-					silent = true
+					silentMap[sourceId] = true
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("QQ")).Do()
 				} else if "說吧" == message.Text {
-					silent = false
+					silentMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do()
 				} else if strings.Contains(message.Text, "現在幾點")  {
 					tellTime(replyToken, true)
