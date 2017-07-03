@@ -36,7 +36,8 @@ var user_shane = "U2ade7ac4456cb3ca99ffdf9d7257329a"
 // Global Settings
 var channelSecret = os.Getenv("CHANNEL_SECRET")
 var channelToken = os.Getenv("CHANNEL_TOKEN")
-var baseURL = os.Getenv("APP_BASE_URL")
+//var baseURL = os.Getenv("APP_BASE_URL")
+var baseURL = "https://line-talking-bot-go.herokuapp.com"
 var endpointBase = os.Getenv("ENDPOINT_BASE")
 var tellTimeInterval int = 15
 var answers_TextMessage = []string{
