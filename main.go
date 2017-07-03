@@ -27,7 +27,7 @@ import (
 )
 
 // Constants
-var timeFormat = "01/02 03:04:05PM"
+var timeFormat = "01/02 PM03:04:05"
 var user_zchien = "U696bcb700dfc9254b27605374b86968b"
 var user_yaoming = "U3aaab6c6248bb38f194134948c60f757"
 var user_jackal = "U3effab06ddf5bcf0b46c1c60bcd39ef5"
