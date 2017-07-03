@@ -187,7 +187,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do()
 				} else if "profile" == message.Text {
 					if source.UserID != "" {
-						profile, err := bot.GetProfile(source.UserID).Do()
+						profile := bot.GetProfile(source.UserID).Do()
 						if _, err := bot.ReplyMessage(
 							replyToken,
 							linebot.NewTextMessage("Display name: "+profile.DisplayName + ", Status message: "+profile.StatusMessage)).Do(); err != nil {
