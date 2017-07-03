@@ -62,7 +62,21 @@ var answers_TextMessage = []string{
 		"不知道為什麼，把眼睛矇上後什麼都看不到。",
 		"出生時，大家都是裸體的喔。",
 	}
-
+var answers_ImageMessage = []string{
+		"傳這甚麼廢圖？你有認真在分享嗎？",
+	}
+var answers_StickerMessage = []string{
+		"腳踏實地打字好嗎？傳這甚麼貼圖？",
+	}
+var answers_VideoMessage = []string{
+		"看甚麼影片，不知道我的流量快用光了嗎？",
+	}
+var answers_AudioMessage = []string{
+		"說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？",
+	}
+var answers_LocationMessage = []string{
+		"這是哪裡啊？火星嗎？",
+	}
 
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
 
@@ -202,27 +216,27 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.ImageMessage :
 				log.Print("ReplyToken[" + replyToken + "] ImageMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("傳這甚麼廢圖？你有認真在分享嗎？")).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ImageMessage[rand.Intn(len(answers_ImageMessage))])).Do()
 				}
 			case *linebot.VideoMessage :
 				log.Print("ReplyToken[" + replyToken + "] VideoMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("看甚麼影片，不知道流量快用光了嗎？")).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_VideoMessage[rand.Intn(len(answers_VideoMessage))])).Do()
 				}
 			case *linebot.AudioMessage :
 				log.Print("ReplyToken[" + replyToken + "] AudioMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), Duration(" + strconv.Itoa(message.Duration) + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？")).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_AudioMessage[rand.Intn(len(answers_AudioMessage))])).Do()
 				}
 			case *linebot.LocationMessage:
 				log.Print("ReplyToken[" + replyToken + "] LocationMessage[" + message.ID + "] Title(" + message.Title  + "), Address(" + message.Address + "), Latitude(" + strconv.FormatFloat(message.Latitude, 'f', -1, 64) + "), Longitude(" + strconv.FormatFloat(message.Longitude, 'f', -1, 64) + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("這是哪裡啊？火星嗎？")).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_LocationMessage[rand.Intn(len(answers_LocationMessage))])).Do()
 				}
 			case *linebot.StickerMessage :
 				log.Print("ReplyToken[" + replyToken + "] StickerMessage[" + message.ID + "] PackageID(" + message.PackageID + "), StickerID(" + message.StickerID + ")" )
 				if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("腳踏實地打字好嗎？傳這甚麼貼圖？")).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_StickerMessage[rand.Intn(len(answers_StickerMessage))])).Do()
 				}
 			}
 		} else if event.Type == linebot.EventTypePostback {
