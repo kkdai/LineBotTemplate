@@ -261,23 +261,19 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						log.Print(err)
 					}
 				} else if "你滾開" == message.Text {
-					switch source.Type {
-					case linebot.EventSourceTypeUser:
-						bot.ReplyMessage(replyToken, linebot.NewTextMessage("我想走, 但是我走不了...")).Do()
-					case linebot.EventSourceTypeGroup:
-						go func() {
-							for {
+					if rand.Intn(100) > 70 {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("請神容易送神難, 我偏不要, 嘿嘿")).Do()
+					} else {
+						switch source.Type {
+						case linebot.EventSourceTypeUser:
+							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我想走, 但是我走不了...")).Do()
+						case linebot.EventSourceTypeGroup:
 							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
-							}
-						}()
-						bot.LeaveGroup(source.GroupID).Do()
-					case linebot.EventSourceTypeRoom:
-						go func() {
-							for {
+							bot.LeaveGroup(source.GroupID).Do()
+						case linebot.EventSourceTypeRoom:
 							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
-							}
-						}()
-						bot.LeaveRoom(source.RoomID).Do()
+							bot.LeaveRoom(source.RoomID).Do()
+						}
 					}
 				} else if silent != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
