@@ -26,35 +26,54 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
-var silent bool = false
-var silentMap = make(map[string]bool)
+// Constants
+var timeFormat = "01/02 03:04:05PM"
+var user_zchien = "U696bcb700dfc9254b27605374b86968b"
+var user_yaoming = "U3aaab6c6248bb38f194134948c60f757"
+var user_jackal = "U3effab06ddf5bcf0b46c1c60bcd39ef5"
+var user_shane = "U2ade7ac4456cb3ca99ffdf9d7257329a"
 
-var timeFormat = "01/02 03:04:05PM '06 -0700"
+// Global Settings
 var tellTimeInterval int = 15
-var echoMap = make(map[string]bool)
+var answers_TextMessage = []string{
+		"人被殺，就會死。",
+		"凡是每天喝水的人，有高機率在100年內死去",
+		"今年中秋節剛好是滿月、今年七夕恰逢鬼月、今年母親節正好是星期日",
+		"只要每天省下買一杯奶茶的錢，十天後就能買十杯奶茶",
+		"台灣人在睡覺時，大多數的美國人都在工作",
+		"台灣競爭力低落，在美國就連小學生都會說流利的英語",
+		"在非洲，每六十秒，就有一分鐘過去",
+		"每呼吸60秒，就減少一分鐘的壽命",
+		"身高170cm的女生看起來和身高1米7的女生一樣高",
+		"英國研究證實，全世界的人口中，減去瘦子的人口數後，剩下來的都是胖子。",
+		"張開你的眼睛！否則，你將什麼都看不見。",
+		"嗯嗯，呵呵，我要去洗澡了",
+		"當一個便當吃不飽時.你可以吃兩個",
+		"當你吃下吃下廿碗白飯，換算竟相當於吃下了二十碗白飯的熱量",
+		"當你的左臉被人打，那你的左臉就會痛",
+		"當蝴蝶在南半球拍了兩下翅膀，牠就會稍微飛高一點點",
+		"誰能想的到，這名16歲少女，在四年前，只是一名12歲少女",
+		"據統計，未婚生子的人數中有高機率為女性",
+		"在非洲，每一分鐘，就有六十秒過去。",
+		"在你的面前閉氣的話，就會不能呼吸喔。",
+		"廢話,日本,推特,氏くん,理所當然的詩",
+		"跟你在一起時，回憶一天前的事，就像回想昨天的事情。",
+		"你不在的這十二個月，對我來說如同一年般長。",
+		"不知道為什麼，把眼睛矇上後什麼都看不到。",
+		"出生時，大家都是裸體的喔。",
+	}
+
+
+var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
+
+//var echoMap = make(map[string]bool)
 
 var loc, _ = time.LoadLocation("Asia/Taipei")
 var bot *linebot.Client
 
-var answers = []string{
-		"嗯嗯，呵呵，我要去洗澡了",
-		"在非洲，每六十秒，就有一分鐘過去",
-		"凡是每天喝水的人，有高機率在100年內死去",
-		"每呼吸60秒，就減少一分鐘的壽命",
-		"當你吃下吃下廿碗白飯，換算竟相當於吃下了二十碗白飯的熱量",
-		"誰能想的到，這名16歲少女，在四年前，只是一名12歲少女",
-		"台灣人在睡覺時，大多數的美國人都在工作",
-		"當蝴蝶在南半球拍了兩下翅膀，牠就會稍微飛高一點點",
-		"據統計，未婚生子的人數中有高機率為女性",
-		"只要每天省下買一杯奶茶的錢，十天後就能買十杯奶茶",
-		"當你的左臉被人打，那你的左臉就會痛",
-		"今年中秋節剛好是滿月、今年七夕恰逢鬼月、今年母親節正好是星期日",
-		"人被殺，就會死。",
-		"台灣競爭力低落，在美國就連小學生都會說流利的英語",
-	}
 
 func tellTime(replyToken string, doTell bool){
-
+var silent = false
 	now := time.Now().In(loc)
 	nowString := now.Format(timeFormat)
 	
@@ -102,21 +121,22 @@ func main() {
 
 func getSourceId(event *linebot.Event) string {
 	var source = event.Source //EventSource
+	
 	var sourceId = source.UserID
 	if sourceId != "" {
-		log.Print("source UserID: " + sourceId)
+		//log.Print("source UserID: " + sourceId)
 		return sourceId
 	}
 
 	sourceId = source.GroupID
 	if sourceId != "" {
-		log.Print("source GroupID: " + sourceId)
+		//log.Print("source GroupID: " + sourceId)
 		return sourceId
 	}
 
 	sourceId = source.RoomID
 	if sourceId != "" {
-		log.Print("source RoomID: " + sourceId)
+		//log.Print("source RoomID: " + sourceId)
 		return sourceId
 	}
 
@@ -143,20 +163,17 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		var replyToken = event.ReplyToken
-		var sourceId = getSourceId(event)
-		log.Print("callbackHandler to source id: " + sourceId)
-
-		if sourceId != "" {
-			if _, ok := echoMap[sourceId]; ok {
-				//log.Print(sourceId + ": " + v)
-			} else {
-				log.Print("New routineDog added: " + sourceId)
-				echoMap[sourceId] = true
-				go routineDog(sourceId)
-			}
-		}
+		
+		var userId = source.UserID
+		var groupId = source.GroupID
+		var roomId = source.RoomID
+		log.Print("callbackHandler to source UserID/GroupID/RoomID: " + userId + "/" + groupId + "/" + roomId)
+		
+		var silent bool = false
 
 		if event.Type == linebot.EventTypeMessage {
+			silent, ok := silentMap[sourceId]
+			
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				log.Print("ReplyToken[" + replyToken + "] TextMessage: ID(" + message.ID + "), Text(" + message.Text  + "), current silent status=" + strconv.FormatBool(silent) )
@@ -173,7 +190,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if strings.Contains(message.Text, "現在幾點")  {
 					tellTime(replyToken, true)
 				} else if silent != true {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers[rand.Intn(len(answers))])).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
 			case *linebot.ImageMessage :
 				log.Print("ReplyToken[" + replyToken + "] ImageMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
