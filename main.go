@@ -190,7 +190,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						profile, err := bot.GetProfile(source.UserID).Do()
 						if _, err := bot.ReplyMessage(
 							replyToken,
-							linebot.NewTextMessage("Display name: "+profile.DisplayName + ", Status message: "+profile.StatusMessage)).Do()
+							linebot.NewTextMessage("Display name: "+profile.DisplayName + ", Status message: "+profile.StatusMessage)).Do(); err != nil {
+								log.Print(err)
+						}
 					} else {
 						bot.ReplyMessage(replyToken, NewTextMessage("Bot can't use profile API without user ID")).Do()
 					}
