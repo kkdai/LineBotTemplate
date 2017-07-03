@@ -203,7 +203,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("Bot can't use profile API without user ID")).Do()
 					}
 				} else if "buttons" == message.Text {
-					imageURL := appBaseURL + "/static/buttons/1040.jpg"
+					imageURL := baseURL + "/static/buttons/1040.jpg"
 					log.Print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+imageURL)
 					template := linebot.NewButtonsTemplate(
 						imageURL, "My button sample", "Hello, my button",
@@ -231,7 +231,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						log.Print(err)
 					}
 				} else if "carousel" == message.Text {
-					imageURL := appBaseURL + "/static/buttons/1040.jpg"
+					imageURL := baseURL + "/static/buttons/1040.jpg"
 					template := linebot.NewCarouselTemplate(
 						linebot.NewCarouselColumn(
 							imageURL, "hoge", "fuga",
