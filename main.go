@@ -209,7 +209,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						replyToken,
 						linebot.NewTemplateMessage("Buttons alt text", template),
 					).Do(); err != nil {
-						return err
+						log.Print(err)
 					}
 				} else if "confirm" == message.Text {
 					template := linebot.NewConfirmTemplate(
@@ -221,7 +221,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						replyToken,
 						linebot.NewTemplateMessage("Confirm alt text", template),
 					).Do(); err != nil {
-						return err
+						log.Print(err)
 					}
 				} else if "carousel" == message.Text {
 					imageURL := bot.appBaseURL + "/static/buttons/1040.jpg"
@@ -241,7 +241,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						replyToken,
 						linebot.NewTemplateMessage("Carousel alt text", template),
 					).Do(); err != nil {
-						return err
+						log.Print(err)
 					}
 				} else if "imagemap" == message.Text {
 					if _, err := bot.ReplyMessage(
@@ -256,7 +256,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							linebot.NewMessageImagemapAction("URANAI!", linebot.ImagemapArea{520, 520, 520, 520}),
 						),
 					).Do(); err != nil {
-						return err
+						log.Print(err)
 					}
 				} else if "你滾開" == message.Text {
 					switch source.Type {
