@@ -56,7 +56,6 @@ var answers_TextMessage = []string{
 		"據統計，未婚生子的人數中有高機率為女性",
 		"在非洲，每一分鐘，就有六十秒過去。",
 		"在你的面前閉氣的話，就會不能呼吸喔。",
-		"廢話,日本,推特,氏くん,理所當然的詩",
 		"跟你在一起時，回憶一天前的事，就像回想昨天的事情。",
 		"你不在的這十二個月，對我來說如同一年般長。",
 		"不知道為什麼，把眼睛矇上後什麼都看不到。",
@@ -119,7 +118,7 @@ func main() {
 			now := time.Now().In(loc)
 			log.Println("keep alive at : " + now.Format(timeFormat))
 			http.Get("https://line-talking-bot-go.herokuapp.com")
-			time.Sleep(time.Duration(rand.Int31n(59)) * time.Minute)
+			time.Sleep(time.Duration(rand.Int31n(29)) * time.Minute)
 		}
 	}()
 	
@@ -131,31 +130,6 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
 
-}
-
-func getSourceId(event *linebot.Event) string {
-	var source = event.Source //EventSource
-	
-	var sourceId = source.UserID
-	if sourceId != "" {
-		//log.Print("source UserID: " + sourceId)
-		return sourceId
-	}
-
-	sourceId = source.GroupID
-	if sourceId != "" {
-		//log.Print("source GroupID: " + sourceId)
-		return sourceId
-	}
-
-	sourceId = source.RoomID
-	if sourceId != "" {
-		//log.Print("source RoomID: " + sourceId)
-		return sourceId
-	}
-
-	log.Print("Unknown source: " + sourceId)
-	return sourceId
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -197,6 +171,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
+
 				log.Print("ReplyToken[" + replyToken + "] TextMessage: ID(" + message.ID + "), Text(" + message.Text  + "), current silent status=" + strconv.FormatBool(silent) )
 				//if _, err = bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
 				//	log.Print(err)
@@ -205,11 +180,95 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if strings.Contains(message.Text, "你閉嘴") {
 					silentMap[sourceId] = true
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("QQ")).Do()
+				} else if strings.Contains(message.Text, "現在幾點")  {
+					tellTime(replyToken, true)
 				} else if "說吧" == message.Text {
 					silentMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do()
-				} else if strings.Contains(message.Text, "現在幾點")  {
-					tellTime(replyToken, true)
+				} else if "profile" == message.Text {
+					if source.UserID != "" {
+						profile, err := bot.GetProfile(source.UserID).Do()
+						if _, err := bot.ReplyMessage(
+							replyToken,
+							linebot.NewTextMessage("Display name: "+profile.DisplayName),
+							linebot.NewTextMessage("Status message: "+profile.StatusMessage),
+						).Do()
+					} else {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("Bot can't use profile API without user ID")).Do()
+					}
+				} else if "buttons" == message.Text {
+					imageURL := bot.appBaseURL + "/static/buttons/1040.jpg"
+					template := linebot.NewButtonsTemplate(
+						imageURL, "My button sample", "Hello, my button",
+						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
+						linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", ""),
+						linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
+						linebot.NewMessageTemplateAction("Say message", "Rice=米"),
+					)
+					if _, err := bot.ReplyMessage(
+						replyToken,
+						linebot.NewTemplateMessage("Buttons alt text", template),
+					).Do(); err != nil {
+						return err
+					}
+				} else if "confirm" == message.Text {
+					template := linebot.NewConfirmTemplate(
+						"Do it?",
+						linebot.NewMessageTemplateAction("Yes", "Yes!"),
+						linebot.NewMessageTemplateAction("No", "No!"),
+					)
+					if _, err := bot.ReplyMessage(
+						replyToken,
+						linebot.NewTemplateMessage("Confirm alt text", template),
+					).Do(); err != nil {
+						return err
+					}
+				} else if "carousel" == message.Text {
+					imageURL := bot.appBaseURL + "/static/buttons/1040.jpg"
+					template := linebot.NewCarouselTemplate(
+						linebot.NewCarouselColumn(
+							imageURL, "hoge", "fuga",
+							linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
+							linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", ""),
+						),
+						linebot.NewCarouselColumn(
+							imageURL, "hoge", "fuga",
+							linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
+							linebot.NewMessageTemplateAction("Say message", "Rice=米"),
+						),
+					)
+					if _, err := bot.ReplyMessage(
+						replyToken,
+						linebot.NewTemplateMessage("Carousel alt text", template),
+					).Do(); err != nil {
+						return err
+					}
+				} else if "imagemap" == message.Text {
+					if _, err := bot.ReplyMessage(
+						replyToken,
+						linebot.NewImagemapMessage(
+							bot.appBaseURL+"/static/rich",
+							"Imagemap alt text",
+							linebot.ImagemapBaseSize{1040, 1040},
+							linebot.NewURIImagemapAction("https://store.line.me/family/manga/en", linebot.ImagemapArea{0, 0, 520, 520}),
+							linebot.NewURIImagemapAction("https://store.line.me/family/music/en", linebot.ImagemapArea{520, 0, 520, 520}),
+							linebot.NewURIImagemapAction("https://store.line.me/family/play/en", linebot.ImagemapArea{0, 520, 520, 520}),
+							linebot.NewMessageImagemapAction("URANAI!", linebot.ImagemapArea{520, 520, 520, 520}),
+						),
+					).Do(); err != nil {
+						return err
+					}
+				} else if "你滾開" == message.Text {
+					switch source.Type {
+					case linebot.EventSourceTypeUser:
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("我想走, 但是我走不了...")).Do()
+					case linebot.EventSourceTypeGroup:
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
+						bot.LeaveRoom(source.RoomID).Do()
+					case linebot.EventSourceTypeRoom:
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
+						bot.LeaveRoom(source.RoomID).Do()
+					}
 				} else if silent != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
@@ -243,4 +302,5 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		} else if event.Type == linebot.EventTypeBeacon {
 		}
 	}
+	
 }
