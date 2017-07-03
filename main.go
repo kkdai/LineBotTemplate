@@ -125,8 +125,9 @@ func tellTimeJob(sourceId string) {
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	tellTimeJob(user_zchien);
-	
+	go func() {
+		tellTimeJob(user_zchien);
+	}()
 	go func() {
 		for {
 			now := time.Now().In(loc)
