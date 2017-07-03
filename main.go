@@ -181,7 +181,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		var silent bool = false
 
 		if event.Type == linebot.EventTypeMessage {
-			silent, ok := silentMap[sourceId]
+			_, silent := silentMap[sourceId]
 			
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
