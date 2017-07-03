@@ -65,6 +65,14 @@ var answers_TextMessage = []string{
 		"你不在的這十二個月，對我來說如同一年般長。",
 		"不知道為什麼，把眼睛矇上後什麼都看不到。",
 		"出生時，大家都是裸體的喔。",
+		"英國研究 生日過越多的人就越老",
+		"歲數越長活的越久",
+		"當別人贏過你時，你就輸了！",
+		"研究指出日本人的母語是日語",
+		"你知道嗎 當你背對太陽 你就看不見金星",
+		"當你失眠的時候，你就會睡不著",
+		"今天是昨天的明天。",
+		"吃得苦中苦，那一口特別苦",
 	}
 var answers_ImageMessage = []string{
 		"傳這甚麼廢圖？你有認真在分享嗎？",
@@ -106,7 +114,7 @@ var silent = false
 	}
 }
 
-func routineDog(sourceId string) {
+func tellTimeJob(sourceId string) {
 	for {
 		time.Sleep(time.Duration(tellTimeInterval) * time.Minute)
 		now := time.Now().In(loc)
@@ -117,7 +125,8 @@ func routineDog(sourceId string) {
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
-
+	tellTimeJob(user_zchien);
+	
 	go func() {
 		for {
 			now := time.Now().In(loc)
