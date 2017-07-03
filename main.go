@@ -170,7 +170,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		var roomId = source.RoomID
 		log.Print("callbackHandler to source UserID/GroupID/RoomID: " + userId + "/" + groupId + "/" + roomId)
 		
-		sourceId = roomId
+		var sourceId = roomId
 		if sourceId == "" {
 			sourceId = groupId
 			if sourceId == "" {
