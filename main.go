@@ -194,10 +194,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 								log.Print(err)
 						}
 					} else {
-						bot.ReplyMessage(replyToken, NewTextMessage("Bot can't use profile API without user ID")).Do()
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("Bot can't use profile API without user ID")).Do()
 					}
 				} else if "buttons" == message.Text {
-					imageURL := bot.appBaseURL + "/static/buttons/1040.jpg"
+					imageURL := linebot.appBaseURL + "/static/buttons/1040.jpg"
 					template := linebot.NewButtonsTemplate(
 						imageURL, "My button sample", "Hello, my button",
 						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
@@ -224,7 +224,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						log.Print(err)
 					}
 				} else if "carousel" == message.Text {
-					imageURL := bot.appBaseURL + "/static/buttons/1040.jpg"
+					imageURL := linebot.appBaseURL + "/static/buttons/1040.jpg"
 					template := linebot.NewCarouselTemplate(
 						linebot.NewCarouselColumn(
 							imageURL, "hoge", "fuga",
@@ -247,7 +247,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					if _, err := bot.ReplyMessage(
 						replyToken,
 						linebot.NewImagemapMessage(
-							bot.appBaseURL+"/static/rich",
+							linebot.appBaseURL+"/static/rich",
 							"Imagemap alt text",
 							linebot.ImagemapBaseSize{1040, 1040},
 							linebot.NewURIImagemapAction("https://store.line.me/family/manga/en", linebot.ImagemapArea{0, 0, 520, 520}),
