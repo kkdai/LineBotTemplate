@@ -204,6 +204,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}
 				} else if "buttons" == message.Text {
 					imageURL := appBaseURL + appBaseURL + "/static/buttons/1040.jpg"
+					log.Print(imageURL)
 					template := linebot.NewButtonsTemplate(
 						imageURL, "My button sample", "Hello, my button",
 						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
