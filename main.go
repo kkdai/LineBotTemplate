@@ -190,9 +190,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						profile, err := bot.GetProfile(source.UserID).Do()
 						if _, err := bot.ReplyMessage(
 							replyToken,
-							linebot.NewTextMessage("Display name: "+profile.DisplayName + ", Status message: "+profile.StatusMessage).Do()
+							linebot.NewTextMessage("Display name: "+profile.DisplayName + ", Status message: "+profile.StatusMessage)).Do()
 					} else {
-						return bot.ReplyMessage(replyToken, "Bot can't use profile API without user ID").Do()
+						bot.ReplyMessage(replyToken, NewTextMessage("Bot can't use profile API without user ID")).Do()
 					}
 				} else if "buttons" == message.Text {
 					imageURL := bot.appBaseURL + "/static/buttons/1040.jpg"
