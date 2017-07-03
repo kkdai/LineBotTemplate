@@ -265,10 +265,18 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					case linebot.EventSourceTypeUser:
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("我想走, 但是我走不了...")).Do()
 					case linebot.EventSourceTypeGroup:
-						bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
-						bot.LeaveRoom(source.GroupID).Do()
+						go func() {
+							for {
+							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
+							}
+						}()
+						bot.LeaveGroup(source.GroupID).Do()
 					case linebot.EventSourceTypeRoom:
-						bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
+						go func() {
+							for {
+							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
+							}
+						}()
 						bot.LeaveRoom(source.RoomID).Do()
 					}
 				} else if silent != true {
