@@ -203,8 +203,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("Bot can't use profile API without user ID")).Do()
 					}
 				} else if "buttons" == message.Text {
-					imageURL := appBaseURL + appBaseURL + "/static/buttons/1040.jpg"
-					log.Print(imageURL)
+					imageURL := appBaseURL + "/static/buttons/1040.jpg"
+					log.Print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+imageURL)
 					template := linebot.NewButtonsTemplate(
 						imageURL, "My button sample", "Hello, my button",
 						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
