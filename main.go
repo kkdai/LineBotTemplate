@@ -34,6 +34,10 @@ var user_jackal = "U3effab06ddf5bcf0b46c1c60bcd39ef5"
 var user_shane = "U2ade7ac4456cb3ca99ffdf9d7257329a"
 
 // Global Settings
+var channelSecret = os.Getenv("CHANNEL_SECRET")
+var channelToken = os.Getenv("CHANNEL_TOKEN")
+var baseUrl = os.Getenv("APP_BASE_URL")
+var endpointBase = os.Getenv("ENDPOINT_BASE")
 var tellTimeInterval int = 15
 var answers_TextMessage = []string{
 		"人被殺，就會死。",
@@ -117,7 +121,7 @@ func main() {
 		for {
 			now := time.Now().In(loc)
 			log.Println("keep alive at : " + now.Format(timeFormat))
-			http.Get("https://line-talking-bot-go.herokuapp.com")
+			//http.Get("https://line-talking-bot-go.herokuapp.com")
 			time.Sleep(time.Duration(rand.Int31n(29)) * time.Minute)
 		}
 	}()
@@ -199,7 +203,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("Bot can't use profile API without user ID")).Do()
 					}
 				} else if "buttons" == message.Text {
-					imageURL := "/static/buttons/1040.jpg"
+					imageURL := appBaseURL + appBaseURL + "/static/buttons/1040.jpg"
 					template := linebot.NewButtonsTemplate(
 						imageURL, "My button sample", "Hello, my button",
 						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
@@ -226,7 +230,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						log.Print(err)
 					}
 				} else if "carousel" == message.Text {
-					imageURL := "/static/buttons/1040.jpg"
+					imageURL := appBaseURL + "/static/buttons/1040.jpg"
 					template := linebot.NewCarouselTemplate(
 						linebot.NewCarouselColumn(
 							imageURL, "hoge", "fuga",
