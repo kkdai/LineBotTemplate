@@ -54,9 +54,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}else{
 					err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("您好:"+message.Text+" 幹!")).Do()
 				}
-					err != nil {
-						log.Print(err)
-					}
+				if err != nil {
+					log.Print(err)
+				}
 
 			}
 		}
