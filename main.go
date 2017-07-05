@@ -52,7 +52,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if (message.text == "幹"){
 					err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("幹三小啦？")).Do();
 				};
-				elseif _{ 
+				else{ 
 					err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("您好:"+message.Text+" 幹!")).Do();
 				}
 				if (err != nil) {
