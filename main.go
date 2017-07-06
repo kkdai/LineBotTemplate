@@ -105,7 +105,7 @@ var bot *linebot.Client
 
 
 func tellTime(replyToken string, doTell bool){
-var silent = false
+	var silent = false
 	now := time.Now().In(loc)
 	nowString := now.Format(timeFormat)
 	
@@ -197,6 +197,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				//if _, err = bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
 				//	log.Print(err)
 				//}
+				
+				if source.UserID != "" {
+					profile, err := bot.GetProfile(source.UserID).Do()
+					if err != nil {
+						log.Print(err)
+					} else if _, err := bot.PushMessage(user_zchien, linebot.NewTextMessage(profile.DisplayName + " says: "+message.Text)).Do(); err != nil {
+							log.Print(err)
+					}
+				}
 				
 				if strings.Contains(message.Text, "你閉嘴") {
 					silentMap[sourceId] = true
