@@ -89,6 +89,12 @@ var answers_AudioMessage = []string{
 var answers_LocationMessage = []string{
 		"這是哪裡啊？火星嗎？",
 	}
+var answers_ReplyCurseMessage = []string{
+		"真的無恥",
+		"有夠無恥",
+		"超級無恥",
+		"就是無恥",
+	}
 
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
 
@@ -290,7 +296,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
 							bot.LeaveRoom(source.RoomID).Do()
 						}
-					}
+				} else if "無恥" == message.Text {
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyCurseMessage[rand.Intn(len(answers_ReplyCurseMessage))])).Do()
 				} else if silent != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
