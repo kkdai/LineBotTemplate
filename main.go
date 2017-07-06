@@ -198,11 +198,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				//	log.Print(err)
 				//}
 				
-				if source.UserID != "" {
+				if source.UserID != "" && source.UserID != user_zchien {
 					profile, err := bot.GetProfile(source.UserID).Do()
 					if err != nil {
 						log.Print(err)
-					} else if _, err := bot.PushMessage(user_zchien, linebot.NewTextMessage(profile.DisplayName + " says: "+message.Text)).Do(); err != nil {
+					} else if _, err := bot.PushMessage(user_zchien, linebot.NewTextMessage(profile.DisplayName + ": "+message.Text)).Do(); err != nil {
 							log.Print(err)
 					}
 				}
