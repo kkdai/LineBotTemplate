@@ -308,7 +308,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}
 				} else if "無恥" == message.Text {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyCurseMessage[rand.Intn(len(answers_ReplyCurseMessage))])).Do()
-				} else if silent != true {
+				} else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
 			case *linebot.ImageMessage :
