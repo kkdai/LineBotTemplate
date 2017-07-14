@@ -277,7 +277,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						linebot.NewCarouselColumn(
 							imageURL, "thisav", "屬於變態的天堂",
 							linebot.NewURITemplateAction("thisav傳送門", "http://thisav.com/"),
-							linebot.NewMessageTemplateAction("你不喜歡看av請按這裡", "我超愛看av的", ""),
+							linebot.NewMessageTemplateAction("你不喜歡看av請按這裡", "我超愛看av的"),
 						),
 						linebot.NewCarouselColumn(
 							imageURL, "xhamster", "給喜歡外國人的你",
