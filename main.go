@@ -73,6 +73,7 @@ var answers_TextMessage = []string{
 		"當你失眠的時候，你就會睡不著",
 		"今天是昨天的明天。",
 		"吃得苦中苦，那一口特別苦",
+	        "我愛你",
 	}
 var answers_ImageMessage = []string{
 		"傳這甚麼廢圖？你有認真在分享嗎？",
@@ -94,6 +95,8 @@ var answers_ReplyCurseMessage = []string{
 		"有夠無恥",
 		"超級無恥",
 		"就是無恥",
+	        "超級無敵無恥",
+	        "和天使一樣無恥（跑",
 	}
 
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
@@ -226,17 +229,17 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 								log.Print(err)
 						}
 					} else {
-						bot.ReplyMessage(replyToken, linebot.NewTextMessage("Bot can't use profile API without user ID")).Do()
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("很抱歉你並不是天使本人無法使用此功能")).Do()
 					}
-				} else if "buttons" == message.Text {
+				} else if "深夜選擇" == message.Text {
 					imageURL := baseURL + "/static/buttons/1040.jpg"
 					//log.Print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+imageURL)
 					template := linebot.NewButtonsTemplate(
-						imageURL, "My button sample", "Hello, my button",
-						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
-						linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", ""),
-						linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
-						linebot.NewMessageTemplateAction("Say message", "Rice=米"),
+						imageURL, "歡迎你喔死變態", "對就是你死變態",
+						linebot.NewURITemplateAction("thisav的傳送門", "http://thisav.com/"),
+						linebot.NewMessageTemplateAction("按這個代表你不是變態", "我是死變態", ""),
+						linebot.NewMessageTemplateAction("按這個代表你是變態", "我是無敵變態", "我是無敵大變態"),
+						linebot.NewMessageTemplateAction("不選擇", "我是個變態但是不敢承認"),
 					)
 					if _, err := bot.ReplyMessage(
 						replyToken,
@@ -244,11 +247,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if "confirm" == message.Text {
+				} else if "變態選擇" == message.Text {
 					template := linebot.NewConfirmTemplate(
-						"Do it?",
-						linebot.NewMessageTemplateAction("Yes", "Yes!"),
-						linebot.NewMessageTemplateAction("No", "No!"),
+						"你是變態嗎?",
+						linebot.NewMessageTemplateAction("是", "我是個誠實的大變態"),
+						linebot.NewMessageTemplateAction("不是", "我是個偷偷侵犯妹妹的死變態"),
 					)
 					if _, err := bot.ReplyMessage(
 						replyToken,
@@ -256,18 +259,31 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if "carousel" == message.Text {
+				} else if "洗版功能" == message.Text {
+					template := linebot.NewConfirmTemplate(
+						"你是變態嗎?",
+						linebot.NewMessageTemplateAction("啟動洗版一次", "我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態"
+										+"我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態我是個誠實的大變態"),
+						linebot.NewMessageTemplateAction("不啟動洗版", "好的已變回可愛的天使bot"),
+					)
+					if _, err := bot.ReplyMessage(
+						replyToken,
+						linebot.NewTemplateMessage("Confirm alt text", template),
+					).Do(); err != nil {
+						log.Print(err)
+					}
+				} else if "av大全" == message.Text {
 					imageURL := baseURL + "/static/buttons/1040.jpg"
 					template := linebot.NewCarouselTemplate(
 						linebot.NewCarouselColumn(
-							imageURL, "hoge", "fuga",
-							linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
-							linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", ""),
+							imageURL, "thisav", "屬於變態的天堂",
+							linebot.NewURITemplateAction("thisav傳送門", "http://thisav.com/"),
+							linebot.NewMessageTemplateAction("你不喜歡看av請按這裡", "我超愛看av的", ""),
 						),
 						linebot.NewCarouselColumn(
-							imageURL, "hoge", "fuga",
-							linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
-							linebot.NewMessageTemplateAction("Say message", "Rice=米"),
+							imageURL, "xhamster", "給喜歡外國人的你",
+							linebot.NewURITemplateAction("xhamster傳送門", "https://xhamster.com/"),
+							linebot.NewMessageTemplateAction("按這裡代表你不打飛機", "我每天3餐格打3次飛機"),
 						),
 					)
 					if _, err := bot.ReplyMessage(
@@ -276,21 +292,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if "imagemap" == message.Text {
-					if _, err := bot.ReplyMessage(
-						replyToken,
-						linebot.NewImagemapMessage(
-							baseURL + "/static/rich",
-							"Imagemap alt text",
-							linebot.ImagemapBaseSize{1040, 1040},
-							linebot.NewURIImagemapAction("https://store.line.me/family/manga/en", linebot.ImagemapArea{0, 0, 520, 520}),
-							linebot.NewURIImagemapAction("https://store.line.me/family/music/en", linebot.ImagemapArea{520, 0, 520, 520}),
-							linebot.NewURIImagemapAction("https://store.line.me/family/play/en", linebot.ImagemapArea{0, 520, 520, 520}),
-							linebot.NewMessageImagemapAction("URANAI!", linebot.ImagemapArea{520, 520, 520, 520}),
-						),
-					).Do(); err != nil {
-						log.Print(err)
-					}
+				
 				} else if "你滾開" == message.Text {
 					if rand.Intn(100) > 70 {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("請神容易送神難, 我偏不要, 嘿嘿")).Do()
