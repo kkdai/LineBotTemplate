@@ -237,8 +237,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					template := linebot.NewButtonsTemplate(
 						imageURL, "歡迎你喔死變態", "對就是你死變態",
 						linebot.NewURITemplateAction("thisav的傳送門", "http://thisav.com/"),
-						linebot.NewMessageTemplateAction("按這個代表你不是變態", "我是死變態", ""),
-						linebot.NewMessageTemplateAction("按這個代表你是變態", "我是無敵變態", "我是無敵大變態"),
+						linebot.NewMessageTemplateAction("按這個代表你不是變態", "我是死變態"),
+						linebot.NewMessageTemplateAction("按這個代表你是變態", "我是無敵大變態"),
 						linebot.NewMessageTemplateAction("不選擇", "我是個變態但是不敢承認"),
 					)
 					if _, err := bot.ReplyMessage(
