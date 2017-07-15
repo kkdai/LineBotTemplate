@@ -99,6 +99,7 @@ var answers_ReplyCurseMessage = []string{
 		"就是無恥",
 	        "超級無敵無恥",
 	        "和天使一樣無恥（跑",
+                "就是啊對你太失望了死變態",
 	}
 
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
@@ -318,6 +319,16 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							linebot.NewMessageTemplateAction("你不喜歡看av請按這裡", "我超愛看av的"),
 						),
 						linebot.NewCarouselColumn(
+							imageURL, "hentaihaven", "給喜歡動漫的你",
+							linebot.NewURITemplateAction("hentaihaven傳送門", "http://hentaihaven.org"),
+							linebot.NewMessageTemplateAction("按這裡代表你你不看色漫", "我超愛蘿莉的他們的鮑魚都好禁"),
+						),
+						linebot.NewCarouselColumn(
+							imageURL, "xnxx", "給喜歡多元化的你",
+							linebot.NewURITemplateAction("xnxx傳送門", "http://www.xnxx.com/"),
+							linebot.NewMessageTemplateAction("按這裡代表你沒有妹妹", "我沒有妹妹但我有爽手"),
+						),
+						linebot.NewCarouselColumn(
 							imageURL, "xhamster", "給喜歡外國人的你",
 							linebot.NewURITemplateAction("xhamster傳送門", "https://xhamster.com/"),
 							linebot.NewMessageTemplateAction("按這裡代表你不打飛機", "我每天3餐各打3次飛機"),
@@ -331,7 +342,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}
 				
 				} else if "你滾開" == message.Text {
-					if rand.Intn(100) > 10 {
+					if rand.Intn(100) > 50 {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("請神容易送神難, 我偏不要, 嘿嘿")).Do()
 					} else {
 						switch source.Type {
