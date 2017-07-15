@@ -273,6 +273,18 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
+				} else if "貪心選擇" == message.Text {
+					template := linebot.NewConfirmTemplate(
+						"你貪心嗎?",
+						linebot.NewMessageTemplateAction("我很貪心", "貪心到連我妹妹的同學都搞"),
+						linebot.NewMessageTemplateAction("我不貪心", "我只搞我妹妹沒搞他同學"),
+					)
+					if _, err := bot.ReplyMessage(
+						replyToken,
+						linebot.NewTemplateMessage("Confirm alt text", template),
+					).Do(); err != nil {
+						log.Print(err)
+					}
 				} else if "騙人選擇" == message.Text {
 					template := linebot.NewConfirmTemplate(
 						"你騙人嗎?",
@@ -319,7 +331,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}
 				
 				} else if "你滾開" == message.Text {
-					if rand.Intn(100) > 90 {
+					if rand.Intn(100) > 10 {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("請神容易送神難, 我偏不要, 嘿嘿")).Do()
 					} else {
 						switch source.Type {
