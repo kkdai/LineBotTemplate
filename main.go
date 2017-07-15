@@ -74,15 +74,17 @@ var answers_TextMessage = []string{
 		"今天是昨天的明天。",
 		"吃得苦中苦，那一口特別苦",
 	        "我愛你",
+	        "天使是無敵的",
+	        "本機器人作者是天使lineid：lovemountain2",
 	}
 var answers_ImageMessage = []string{
-		"傳這甚麼廢圖？你有認真在分享嗎？",
+		"傳這甚麼廢圖？你有認真在分享嗎？快發色圖啦",
 	}
 var answers_StickerMessage = []string{
-		"腳踏實地打字好嗎？傳這甚麼貼圖？",
+		"腳踏實地打字好嗎？傳這甚麼貼圖？又不是色圖",
 	}
 var answers_VideoMessage = []string{
-		"看甚麼影片，不知道我的流量快用光了嗎？",
+		"看甚麼影片，不知道我的流量快用光了嗎？真是的又不是av",
 	}
 var answers_AudioMessage = []string{
 		"說的比唱的好聽，唱得鬼哭神號，是要嚇唬誰？",
@@ -259,6 +261,30 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
+				} else if "誠實選擇" == message.Text {
+					template := linebot.NewConfirmTemplate(
+						"你誠實嗎?",
+						linebot.NewMessageTemplateAction("我很誠實", "我很誠實告訴你我是個變態"),
+						linebot.NewMessageTemplateAction("我不誠實", "我是個偷偷侵犯妹妹的死變態"),
+					)
+					if _, err := bot.ReplyMessage(
+						replyToken,
+						linebot.NewTemplateMessage("Confirm alt text", template),
+					).Do(); err != nil {
+						log.Print(err)
+					}
+				} else if "騙人選擇" == message.Text {
+					template := linebot.NewConfirmTemplate(
+						"你騙人嗎?",
+						linebot.NewMessageTemplateAction("我沒騙人", "是的我騙你我不是變態"),
+						linebot.NewMessageTemplateAction("我在騙人", "我是個偷偷侵犯妹妹的死變態"),
+					)
+					if _, err := bot.ReplyMessage(
+						replyToken,
+						linebot.NewTemplateMessage("Confirm alt text", template),
+					).Do(); err != nil {
+						log.Print(err)
+					}
 				} else if "洗版功能" == message.Text {
 					template := linebot.NewConfirmTemplate(
 						"你是變態嗎?",
@@ -282,7 +308,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						linebot.NewCarouselColumn(
 							imageURL, "xhamster", "給喜歡外國人的你",
 							linebot.NewURITemplateAction("xhamster傳送門", "https://xhamster.com/"),
-							linebot.NewMessageTemplateAction("按這裡代表你不打飛機", "我每天3餐格打3次飛機"),
+							linebot.NewMessageTemplateAction("按這裡代表你不打飛機", "我每天3餐各打3次飛機"),
 						),
 					)
 					if _, err := bot.ReplyMessage(
@@ -293,7 +319,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}
 				
 				} else if "你滾開" == message.Text {
-					if rand.Intn(100) > 70 {
+					if rand.Intn(100) > 90 {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("請神容易送神難, 我偏不要, 嘿嘿")).Do()
 					} else {
 						switch source.Type {
