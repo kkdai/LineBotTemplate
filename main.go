@@ -319,8 +319,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							linebot.NewMessageTemplateAction("你不喜歡看av請按這裡", "我超愛看av的"),
 						),
 						linebot.NewCarouselColumn(
-							imageURL, "hentaihaven", "給喜歡動漫的你",
-							linebot.NewURITemplateAction("hentaihaven傳送門", "http://hentaihaven.org"),
+							imageURL, "h-game", "給喜歡動漫的你",
+							linebot.NewURITemplateAction("h-game傳送門", "https://h-game123.com/"),
 							linebot.NewMessageTemplateAction("按這裡代表你你不看色漫", "我超愛蘿莉的他們的鮑魚都好禁"),
 						),
 						linebot.NewCarouselColumn(
