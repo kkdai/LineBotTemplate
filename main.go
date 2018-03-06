@@ -367,9 +367,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if strings.Contains(message.Text, "無恥") {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyCurseMessage[rand.Intn(len(answers_ReplyCurseMessage))])).Do()
 				} else if strings.Contains(message.Text, "祥") {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyxiang[rand.Intn(len(answers_Replyxiang))])
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyxiang[rand.Intn(len(answers_Replyxiang))])).Do()
 				} else if strings.Contains(message.Text, "燕") {
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyyansheng[rand.Intn(len(answers_Replyyansheng))])
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyyansheng[rand.Intn(len(answers_Replyyansheng))])).Do()
 				} else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
