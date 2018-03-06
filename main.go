@@ -101,7 +101,15 @@ var answers_ReplyCurseMessage = []string{
 	        "和天使一樣無恥（跑",
                 "就是啊對你太失望了死變態",
 	}
-
+var answers_Replyyansheng = []string{
+	       "又在說燕神的事了"
+	       "來啊喂又是燕神啊"
+        }
+var answers_Replyxiang = []strings{
+	       "祥這個名字讓我想吐"
+	       "請不要再提祥這個讓人想吐的名字了"
+        }
+	       
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
 
 //var echoMap = make(map[string]bool)
@@ -250,7 +258,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if "變態選擇" == message.Text {
+				} else if strings.Contains(message.Text, "變態") {
 					template := linebot.NewConfirmTemplate(
 						"你是變態嗎?",
 						linebot.NewMessageTemplateAction("是", "我是個誠實的大變態"),
@@ -262,7 +270,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if "誠實選擇" == message.Text {
+				} else if strings.Contains(message.Text, "fgo")  {
 					template := linebot.NewConfirmTemplate(
 						"你誠實嗎?",
 						linebot.NewMessageTemplateAction("我很誠實", "我很誠實告訴你我是個變態"),
@@ -274,7 +282,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if "貪心選擇" == message.Text {
+				} else if strings.Contains(message.Text, "貪心")  {
 					template := linebot.NewConfirmTemplate(
 						"你貪心嗎?",
 						linebot.NewMessageTemplateAction("我很貪心", "貪心到連我妹妹的同學都搞"),
@@ -286,7 +294,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if "騙人選擇" == message.Text {
+				} else if strings.Contains(message.Text, "騙人") {
 					template := linebot.NewConfirmTemplate(
 						"你騙人嗎?",
 						linebot.NewMessageTemplateAction("我沒騙人", "是的我騙你我不是變態"),
@@ -310,7 +318,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if "av大全" == message.Text {
+				} else if "av推薦" == message.Text {
 					imageURL := baseURL + "/static/buttons/1040.jpg"
 					template := linebot.NewCarouselTemplate(
 						linebot.NewCarouselColumn(
@@ -356,8 +364,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							bot.LeaveRoom(source.RoomID).Do()
 						}
 					}
-				} else if "無恥" == message.Text {
+				} else if strings.Contains(message.Text, "無恥") {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyCurseMessage[rand.Intn(len(answers_ReplyCurseMessage))])).Do()
+				} else if strings.Contains(message.Text, "祥") {
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyxiang[rand.Intn(len(answers_Replyxiang))])
+				} else if strings.Contains(message.Text, "燕") {
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyyansheng[rand.Intn(len(answers_Replyyansheng))])
 				} else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
