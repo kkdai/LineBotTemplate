@@ -377,8 +377,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyQQ[rand.Intn(len(answers_ReplyQQ))])).Do()
 				} else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
-				} else if nowtime = "PM09:55:00" {
-					bot.ReplyMessage(replyToken, linebot.NEwTextMessage("還有5分鐘就十點咯")).Do()
 				}
 			case *linebot.ImageMessage :
 				log.Print("ReplyToken[" + replyToken + "] ImageMessage[" + message.ID + "] OriginalContentURL(" + message.OriginalContentURL + "), PreviewImageURL(" + message.PreviewImageURL + ")" )
