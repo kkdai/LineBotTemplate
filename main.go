@@ -102,12 +102,12 @@ var answers_ReplyCurseMessage = []string{
                 "就是啊對你太失望了死變態",
 	}
 var answers_Replyyansheng = []string{
-	       "又在說燕神的事了"
-	       "來啊喂又是燕神啊"
+	       "又在說燕神的事了",
+	       "來啊喂又是燕神啊",
         }
 var answers_Replyxiang = []strings{
-	       "祥這個名字讓我想吐"
-	       "請不要再提祥這個讓人想吐的名字了"
+	       "祥這個名字讓我想吐",
+	       "請不要再提祥這個讓人想吐的名字了",
         }
 	       
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
