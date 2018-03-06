@@ -105,7 +105,7 @@ var answers_Replyyansheng = []string{
 	       "又在說燕神的事了",
 	       "來啊喂又是燕神啊",
         }
-var answers_Replyxiang = []strings{
+var answers_Replyxiang = []string{
 	       "祥這個名字讓我想吐",
 	       "請不要再提祥這個讓人想吐的名字了",
         }
