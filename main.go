@@ -112,7 +112,7 @@ var answers_Replyxiang = []string{
 var answers_ReplyQQ = []string{
 	      "Q什麼Q",
 	      "再Q試試看",
-	       
+        }      
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
 
 //var echoMap = make(map[string]bool)
@@ -129,7 +129,7 @@ func tellTime(replyToken string, doTell bool){
 	if doTell {
 		log.Println("現在時間(台北): " + nowString)
 		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間(台北): " + nowString)).Do()
-	} else if silent != true {
+	} else if silent = true {
 		log.Println("自動報時(台北): " + nowString)
 		bot.PushMessage(replyToken, linebot.NewTextMessage("自動報時(台北): " + nowString)).Do()
 	} else {
