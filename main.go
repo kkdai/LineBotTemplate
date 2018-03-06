@@ -109,6 +109,9 @@ var answers_Replyxiang = []string{
 	       "祥這個名字讓我想吐",
 	       "請不要再提祥這個讓人想吐的名字了",
         }
+var answers_ReplyQQ = []string{
+	      "Q什麼Q",
+	      "再Q試試看",
 	       
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
 
@@ -349,7 +352,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						log.Print(err)
 					}
 				
-				} else if "你滾開" == message.Text {
+				} else if strings.Contains(message.Text, "滾") {
 					if rand.Intn(100) > 50 {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("請神容易送神難, 我偏不要, 嘿嘿")).Do()
 					} else {
@@ -370,6 +373,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyxiang[rand.Intn(len(answers_Replyxiang))])).Do()
 				} else if strings.Contains(message.Text, "燕") {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyyansheng[rand.Intn(len(answers_Replyyansheng))])).Do()
+				} else if strings.Contains(message.Text, "Q") {
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyQQ[rand.Intn(len(answers_ReplyQQ))])).Do()
 				} else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
