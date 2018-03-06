@@ -129,7 +129,7 @@ func tellTime(replyToken string, doTell bool){
 	if doTell {
 		log.Println("現在時間(台北): " + nowString)
 		bot.ReplyMessage(replyToken, linebot.NewTextMessage("現在時間(台北): " + nowString)).Do()
-	} else if silent = true {
+	} else if silent ! = true {
 		log.Println("自動報時(台北): " + nowString)
 		bot.PushMessage(replyToken, linebot.NewTextMessage("自動報時(台北): " + nowString)).Do()
 	} else {
