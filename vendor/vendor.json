@@ -3,10 +3,10 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "h8ZzyQTRljjxHgqCHniOd1hURV8=",
+			"checksumSHA1": "0nIFK6e0pFLkwBgR5aVjMyGGFTY=",
 			"path": "github.com/line/line-bot-sdk-go/linebot",
-			"revision": "b7e1bd128fef0e6a532d1afce049cbcd8dc5f4c8",
-			"revisionTime": "2016-11-01T06:09:53Z"
+			"revision": "0dd6d85ecc4ffa3787cca17f3ac6db55bb78014b",
+			"revisionTime": "2018-08-09T03:25:42Z"
 		},
 		{
 			"checksumSHA1": "9jjO5GjLa0XF/nfWihF02RoH4qc=",

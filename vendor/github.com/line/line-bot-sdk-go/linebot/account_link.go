@@ -19,34 +19,38 @@ import (
 	"fmt"
 )
 
-// GetMessageContent method
-func (client *Client) GetMessageContent(messageID string) *GetMessageContentCall {
-	return &GetMessageContentCall{
-		c:         client,
-		messageID: messageID,
+// IssueLinkToken method
+// https://developers.line.me/en/reference/messaging-api/#issue-link-token
+func (client *Client) IssueLinkToken(userID string) *IssueLinkTokenCall {
+	return &IssueLinkTokenCall{
+		c:      client,
+		userID: userID,
 	}
 }
 
-// GetMessageContentCall type
-type GetMessageContentCall struct {
+// IssueLinkTokenCall type
+type IssueLinkTokenCall struct {
 	c   *Client
 	ctx context.Context
 
-	messageID string
+	userID string
 }
 
 // WithContext method
-func (call *GetMessageContentCall) WithContext(ctx context.Context) *GetMessageContentCall {
+func (call *IssueLinkTokenCall) WithContext(ctx context.Context) *IssueLinkTokenCall {
 	call.ctx = ctx
 	return call
 }
 
 // Do method
-func (call *GetMessageContentCall) Do() (*MessageContentResponse, error) {
-	endpoint := fmt.Sprintf(APIEndpointGetMessageContent, call.messageID)
-	res, err := call.c.get(call.ctx, endpoint, nil)
+func (call *IssueLinkTokenCall) Do() (*LinkTokenResponse, error) {
+	endpoint := fmt.Sprintf(APIEndpointLinkToken, call.userID)
+	res, err := call.c.post(call.ctx, endpoint, nil)
+	if res != nil && res.Body != nil {
+		defer res.Body.Close()
+	}
 	if err != nil {
 		return nil, err
 	}
-	return decodeToMessageContentResponse(res)
+	return decodeToLinkTokenResponse(res)
 }

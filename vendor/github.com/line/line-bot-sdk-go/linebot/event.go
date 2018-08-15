@@ -15,6 +15,7 @@
 package linebot
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"time"
 )
@@ -24,13 +25,14 @@ type EventType string
 
 // EventType constants
 const (
-	EventTypeMessage  EventType = "message"
-	EventTypeFollow   EventType = "follow"
-	EventTypeUnfollow EventType = "unfollow"
-	EventTypeJoin     EventType = "join"
-	EventTypeLeave    EventType = "leave"
-	EventTypePostback EventType = "postback"
-	EventTypeBeacon   EventType = "beacon"
+	EventTypeMessage     EventType = "message"
+	EventTypeFollow      EventType = "follow"
+	EventTypeUnfollow    EventType = "unfollow"
+	EventTypeJoin        EventType = "join"
+	EventTypeLeave       EventType = "leave"
+	EventTypePostback    EventType = "postback"
+	EventTypeBeacon      EventType = "beacon"
+	EventTypeAccountLink EventType = "accountLink"
 )
 
 // EventSourceType type
@@ -51,9 +53,17 @@ type EventSource struct {
 	RoomID  string          `json:"roomId,omitempty"`
 }
 
+// Params type
+type Params struct {
+	Date     string `json:"date,omitempty"`
+	Time     string `json:"time,omitempty"`
+	Datetime string `json:"datetime,omitempty"`
+}
+
 // Postback type
 type Postback struct {
-	Data string `json:"data"`
+	Data   string  `json:"data"`
+	Params *Params `json:"params,omitempty"`
 }
 
 // BeaconEventType type
@@ -61,34 +71,54 @@ type BeaconEventType string
 
 // BeaconEventType constants
 const (
-	BeaconEventTypeEnter BeaconEventType = "enter"
+	BeaconEventTypeEnter  BeaconEventType = "enter"
+	BeaconEventTypeLeave  BeaconEventType = "leave"
+	BeaconEventTypeBanner BeaconEventType = "banner"
 )
 
 // Beacon type
 type Beacon struct {
-	Hwid string          `json:"hwid"`
-	Type BeaconEventType `json:"type"`
+	Hwid          string
+	Type          BeaconEventType
+	DeviceMessage []byte
+}
+
+// AccountLinkResult type
+type AccountLinkResult string
+
+// AccountLinkResult constants
+const (
+	AccountLinkResultOK     AccountLinkResult = "ok"
+	AccountLinkResultFailed AccountLinkResult = "failed"
+)
+
+// AccountLink type
+type AccountLink struct {
+	Result AccountLinkResult
+	Nonce  string
 }
 
 // Event type
 type Event struct {
-	ReplyToken string
-	Type       EventType
-	Timestamp  time.Time
-	Source     *EventSource
-	Message    Message
-	Postback   *Postback
-	Beacon     *Beacon
+	ReplyToken  string
+	Type        EventType
+	Timestamp   time.Time
+	Source      *EventSource
+	Message     Message
+	Postback    *Postback
+	Beacon      *Beacon
+	AccountLink *AccountLink
 }
 
 type rawEvent struct {
-	ReplyToken string           `json:"replyToken,omitempty"`
-	Type       EventType        `json:"type"`
-	Timestamp  int64            `json:"timestamp"`
-	Source     *EventSource     `json:"source"`
-	Message    *rawEventMessage `json:"message,omitempty"`
-	*Postback  `json:"postback,omitempty"`
-	*Beacon    `json:"beacon,omitempty"`
+	ReplyToken  string           `json:"replyToken,omitempty"`
+	Type        EventType        `json:"type"`
+	Timestamp   int64            `json:"timestamp"`
+	Source      *EventSource     `json:"source"`
+	Message     *rawEventMessage `json:"message,omitempty"`
+	*Postback   `json:"postback,omitempty"`
+	Beacon      *rawBeaconEvent      `json:"beacon,omitempty"`
+	AccountLink *rawAccountLinkEvent `json:"link,omitempty"`
 }
 
 type rawEventMessage struct {
@@ -98,10 +128,23 @@ type rawEventMessage struct {
 	Duration  int         `json:"duration,omitempty"`
 	Title     string      `json:"title,omitempty"`
 	Address   string      `json:"address,omitempty"`
+	FileName  string      `json:"fileName,omitempty"`
+	FileSize  int         `json:"fileSize,omitempty"`
 	Latitude  float64     `json:"latitude,omitempty"`
 	Longitude float64     `json:"longitude,omitempty"`
 	PackageID string      `json:"packageId,omitempty"`
 	StickerID string      `json:"stickerId,omitempty"`
+}
+
+type rawBeaconEvent struct {
+	Hwid string          `json:"hwid"`
+	Type BeaconEventType `json:"type"`
+	DM   string          `json:"dm,omitempty"`
+}
+
+type rawAccountLinkEvent struct {
+	Result AccountLinkResult `json:"result"`
+	Nonce  string            `json:"nonce"`
 }
 
 const (
@@ -117,7 +160,19 @@ func (e *Event) MarshalJSON() ([]byte, error) {
 		Timestamp:  e.Timestamp.Unix()*millisecPerSec + int64(e.Timestamp.Nanosecond())/int64(time.Millisecond),
 		Source:     e.Source,
 		Postback:   e.Postback,
-		Beacon:     e.Beacon,
+	}
+	if e.Beacon != nil {
+		raw.Beacon = &rawBeaconEvent{
+			Hwid: e.Beacon.Hwid,
+			Type: e.Beacon.Type,
+			DM:   hex.EncodeToString(e.Beacon.DeviceMessage),
+		}
+	}
+	if e.AccountLink != nil {
+		raw.AccountLink = &rawAccountLinkEvent{
+			Result: e.AccountLink.Result,
+			Nonce:  e.AccountLink.Nonce,
+		}
 	}
 
 	switch m := e.Message.(type) {
@@ -196,6 +251,12 @@ func (e *Event) UnmarshalJSON(body []byte) (err error) {
 				ID:       rawEvent.Message.ID,
 				Duration: rawEvent.Message.Duration,
 			}
+		case MessageTypeFile:
+			e.Message = &FileMessage{
+				ID:       rawEvent.Message.ID,
+				FileName: rawEvent.Message.FileName,
+				FileSize: rawEvent.Message.FileSize,
+			}
 		case MessageTypeLocation:
 			e.Message = &LocationMessage{
 				ID:        rawEvent.Message.ID,
@@ -214,7 +275,21 @@ func (e *Event) UnmarshalJSON(body []byte) (err error) {
 	case EventTypePostback:
 		e.Postback = rawEvent.Postback
 	case EventTypeBeacon:
-		e.Beacon = rawEvent.Beacon
+		var deviceMessage []byte
+		deviceMessage, err = hex.DecodeString(rawEvent.Beacon.DM)
+		if err != nil {
+			return
+		}
+		e.Beacon = &Beacon{
+			Hwid:          rawEvent.Beacon.Hwid,
+			Type:          rawEvent.Beacon.Type,
+			DeviceMessage: deviceMessage,
+		}
+	case EventTypeAccountLink:
+		e.AccountLink = &AccountLink{
+			Result: rawEvent.AccountLink.Result,
+			Nonce:  rawEvent.AccountLink.Nonce,
+		}
 	}
 	return
 }

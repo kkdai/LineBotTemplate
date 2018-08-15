@@ -15,9 +15,8 @@
 package linebot
 
 import (
+	"context"
 	"fmt"
-
-	"golang.org/x/net/context"
 )
 
 // GetProfile method
@@ -45,7 +44,81 @@ func (call *GetProfileCall) WithContext(ctx context.Context) *GetProfileCall {
 // Do method
 func (call *GetProfileCall) Do() (*UserProfileResponse, error) {
 	endpoint := fmt.Sprintf(APIEndpointGetProfile, call.userID)
-	res, err := call.c.get(call.ctx, endpoint)
+	res, err := call.c.get(call.ctx, endpoint, nil)
+	if res != nil && res.Body != nil {
+		defer res.Body.Close()
+	}
+	if err != nil {
+		return nil, err
+	}
+	return decodeToUserProfileResponse(res)
+}
+
+// GetGroupMemberProfile method
+func (client *Client) GetGroupMemberProfile(groupID, userID string) *GetGroupMemberProfileCall {
+	return &GetGroupMemberProfileCall{
+		c:       client,
+		groupID: groupID,
+		userID:  userID,
+	}
+}
+
+// GetGroupMemberProfileCall type
+type GetGroupMemberProfileCall struct {
+	c   *Client
+	ctx context.Context
+
+	groupID string
+	userID  string
+}
+
+// WithContext method
+func (call *GetGroupMemberProfileCall) WithContext(ctx context.Context) *GetGroupMemberProfileCall {
+	call.ctx = ctx
+	return call
+}
+
+// Do method
+func (call *GetGroupMemberProfileCall) Do() (*UserProfileResponse, error) {
+	endpoint := fmt.Sprintf(APIEndpointGetGroupMemberProfile, call.groupID, call.userID)
+	res, err := call.c.get(call.ctx, endpoint, nil)
+	if res != nil && res.Body != nil {
+		defer res.Body.Close()
+	}
+	if err != nil {
+		return nil, err
+	}
+	return decodeToUserProfileResponse(res)
+}
+
+// GetRoomMemberProfile method
+func (client *Client) GetRoomMemberProfile(roomID, userID string) *GetRoomMemberProfileCall {
+	return &GetRoomMemberProfileCall{
+		c:      client,
+		roomID: roomID,
+		userID: userID,
+	}
+}
+
+// GetRoomMemberProfileCall type
+type GetRoomMemberProfileCall struct {
+	c   *Client
+	ctx context.Context
+
+	roomID string
+	userID string
+}
+
+// WithContext method
+func (call *GetRoomMemberProfileCall) WithContext(ctx context.Context) *GetRoomMemberProfileCall {
+	call.ctx = ctx
+	return call
+}
+
+// Do method
+func (call *GetRoomMemberProfileCall) Do() (*UserProfileResponse, error) {
+	endpoint := fmt.Sprintf(APIEndpointGetRoomMemberProfile, call.roomID, call.userID)
+	res, err := call.c.get(call.ctx, endpoint, nil)
 	if res != nil && res.Body != nil {
 		defer res.Body.Close()
 	}
