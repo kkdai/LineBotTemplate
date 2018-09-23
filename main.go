@@ -239,8 +239,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}else if "洗版結束密碼010220" == message.Text {
 					washMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("已關閉")).Do()
-				}
-				else if "profile" == message.Text {
+				}else if "profile" == message.Text {
 					if source.UserID != "" {
 						profile, err := bot.GetProfile(source.UserID).Do()
 						if err != nil {
@@ -383,8 +382,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyyansheng[rand.Intn(len(answers_Replyyansheng))])).Do()
 				} else if strings.Contains(message.Text, "Q") {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyQQ[rand.Intn(len(answers_ReplyQQ))])).Do()
-				} 
-				else if washMap[sourceId] = true {
+				} else if washMap[sourceId] = true {
 					if  message.Text == message.Text{
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
