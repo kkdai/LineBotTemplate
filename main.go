@@ -123,7 +123,6 @@ var bot *linebot.Client
 
 func tellTime(replyToken string, doTell bool){
 	var silent = false
-	var wash = false
 	now := time.Now().In(loc)
 	nowString := now.Format(timeFormat)
 	
@@ -207,7 +206,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		
 		if event.Type == linebot.EventTypeMessage {
 			_, silent := silentMap[sourceId]
-			_, wash := washMap[sourceId]
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 
