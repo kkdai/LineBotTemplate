@@ -114,7 +114,7 @@ var answers_ReplyQQ = []string{
 	      "再Q試試看",
         }      
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
-
+var washMap = make(map[string]bool)
 //var echoMap = make(map[string]bool)
 
 var loc, _ = time.LoadLocation("Asia/Taipei")
@@ -123,6 +123,7 @@ var bot *linebot.Client
 
 func tellTime(replyToken string, doTell bool){
 	var silent = false
+	var wash = false
 	now := time.Now().In(loc)
 	nowString := now.Format(timeFormat)
 	
@@ -206,7 +207,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		
 		if event.Type == linebot.EventTypeMessage {
 			_, silent := silentMap[sourceId]
-			
+			   wash := washMap[sourceId]
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 
@@ -232,7 +233,16 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if "說吧" == message.Text {
 					silentMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do()
-				} else if "profile" == message.Text {
+				} 
+				 else if "洗版開始密碼010220" == message.Text {
+					washMap[sourceId] = true
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("準備完畢")).Do()
+				}
+				else if "洗版結束密碼010220" == message.Text {
+					washMap[sourceId] = false
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("已關閉")).Do()
+				}
+				else if "profile" == message.Text {
 					if source.UserID != "" {
 						profile, err := bot.GetProfile(source.UserID).Do()
 						if err != nil {
@@ -375,7 +385,24 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyyansheng[rand.Intn(len(answers_Replyyansheng))])).Do()
 				} else if strings.Contains(message.Text, "Q") {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyQQ[rand.Intn(len(answers_ReplyQQ))])).Do()
-				} else if silentMap[sourceId] != true {
+				} 
+				else if washMap[sourceId] = true {
+					if "深夜選擇" == message.Text{
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text).Do()
+						
+				}
+				else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
 			case *linebot.ImageMessage :
