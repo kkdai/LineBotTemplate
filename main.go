@@ -233,12 +233,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if "說吧" == message.Text {
 					silentMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("麥克風測試，1、2、3... OK")).Do()
-				} 
-				 else if "洗版開始密碼010220" == message.Text {
+				}else if "洗版開始密碼010220" == message.Text {
 					washMap[sourceId] = true
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("準備完畢")).Do()
-				}
-				else if "洗版結束密碼010220" == message.Text {
+				}else if "洗版結束密碼010220" == message.Text {
 					washMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("已關閉")).Do()
 				}
@@ -387,7 +385,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyQQ[rand.Intn(len(answers_ReplyQQ))])).Do()
 				} 
 				else if washMap[sourceId] = true {
-					if "深夜選擇" == message.Text{
+					if  message.Text == message.Text{
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
@@ -402,6 +400,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text).Do()
 						
 				}
+					}
 				else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
