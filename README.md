@@ -1,4 +1,4 @@
-LineBotTemplate: A simple Golang LineBot Template for Line Bot API
+LINE BotTemplate: A simple Golang LINE Bot Template for LINE Bot API
 ==============
 
 [![Join the chat at https://gitter.im/kkdai/LineBotTemplate](https://badges.gitter.im/kkdai/LineBotTemplate.svg)](https://gitter.im/kkdai/LineBotTemplate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
