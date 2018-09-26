@@ -11,9 +11,9 @@ LineBotTemplate: A simple Golang LineBot Template for Line Bot API
 Installation and Usage
 =============
 
-### 1. Got A Line Bot API devloper account
+### 1. Got A LINE Bot API devloper account
 
-[Make sure you already registered](https://business.line.me/zh-hant/services/bot), if you need use Line Bot.
+[Make sure you already registered](https://business.line.me/zh-hant/services/bot), if you need use LINE Bot.
 
 ### 2. Just Deploy the same on Heroku
 
@@ -23,7 +23,7 @@ Remember your heroku, ID.
 
 <br><br>
 
-### 3. Go to Line Bot Dashboard, setup basic API
+### 3. Go to LINE Bot Dashboard, setup basic API
 
 Setup your basic account information. Here is some info you will need to know.
 
@@ -47,8 +47,8 @@ It all done.
 
 ### Video Tutorial:
 
-- [How to deploy LineBotTemplate](https://www.youtube.com/watch?v=xpP51Kwuy2U)
-- [Hoe to modify your LineBotTemplate code](https://www.youtube.com/watch?v=ckij73sIRik)
+- [How to deploy LINE BotTemplate](https://www.youtube.com/watch?v=xpP51Kwuy2U)
+- [Hoe to modify your LINE BotTemplate code](https://www.youtube.com/watch?v=ckij73sIRik)
 
 
 ### Chinese Tutorial:
