@@ -240,7 +240,19 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}else if "洗版結束密碼010220" == message.Text {
 					washMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("已關閉")).Do()
-				}else if "終結開始使用者確認" == message.Text {
+				}else if "全使用權關閉 == message.Text {
+					if source.UserID != user_tenshi {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你滾，這不是你可以用的")).Do()
+					}
+					if source.UserID == user_tenshi{
+			                AwashMaap[sourceId] = false
+					clearMap[sourceId] = false
+					washMap[sourceId] = false
+					silentMap[sourceId] = true
+					highCMap[sourceId] = false
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("全功能已經鎖上")).Do()
+					}
+			         }else if "終結開始使用者確認" == message.Text {
 					if source.UserID != user_tenshi {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你不是我的主人，無法使用此功能")).Do()
 					}
