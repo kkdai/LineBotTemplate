@@ -369,7 +369,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if strings.Contains(message.Text, "滾") {
 					if source.UserID != user_tenshi {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你不是我的主人沒資格叫我走")).Do()
-					}if source.UserID == user_tenshi {
+					}
+					if source.UserID == user_tenshi {
 							bot.LeaveRoom(source.RoomID).Do()
 					}
 						
