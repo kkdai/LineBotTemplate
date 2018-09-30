@@ -242,7 +242,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					if source.UserID != user_tenshi {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你不是我的主人，無法使用此功能")).Do()
 					}
-					if user_tenshi = source.UserID {
+					if source.UserID == user_tenshi{
 					clearMap[sourceId] = true
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，終結模式開始")).Do()
 					}
