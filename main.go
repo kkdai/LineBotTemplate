@@ -450,15 +450,18 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
 					}
 				}else if washMap[sourceId] == true {
+					if highCMap[sourceId] == false{
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("還沒通過使用者認證，請說‘使用者確認’")).Do()
+					}
 					if highCMap[sourceId] == true{
-					if  message.Text == message.Text{
-						if source.UserID != user_tenshi{
-							washMap[sourceId] = false
-							highCMap[sourceId] = false
-							bot.ReplyMessage(replyToken, linebot.NewTextMessage("檢測到非主人命令，結束一切權限")).Do()
+					     if  message.Text == message.Text{
+						  if source.UserID != user_tenshi{
+							 washMap[sourceId] = false
+							 highCMap[sourceId] = false
+							 bot.ReplyMessage(replyToken, linebot.NewTextMessage("檢測到非主人命令，結束一切權限")).Do()
 						                                }
-						if source.UserID == user_tenshi {
-						bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+						       if source.UserID == user_tenshi {
+						       bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
@@ -470,9 +473,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
+					                                               }
 					                                       }
-					}
-					}
+					                                }
 					}else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
