@@ -32,7 +32,7 @@ var user_zchien = "U696bcb700dfc9254b27605374b86968b"
 var user_yaoming = "U3aaab6c6248bb38f194134948c60f757"
 var user_jackal = "U3effab06ddf5bcf0b46c1c60bcd39ef5"
 var user_shane = "U2ade7ac4456cb3ca99ffdf9d7257329a"
-
+var user_tenshi = "U1afa490979eb023cf3ed0db8c233f61e"
 // Global Settings
 var channelSecret = os.Getenv("CHANNEL_SECRET")
 var channelToken = os.Getenv("CHANNEL_TOKEN")
@@ -115,6 +115,7 @@ var answers_ReplyQQ = []string{
         }      
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
 var washMap = make(map[string]bool)
+var clearMap = make(map[string]bool)
 //var echoMap = make(map[string]bool)
 
 var loc, _ = time.LoadLocation("Asia/Taipei")
@@ -237,6 +238,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}else if "洗版結束密碼010220" == message.Text {
 					washMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("已關閉")).Do()
+				}else if "終結開始使用者確認" == message.Text {
+					if source.UserID != user_tenshi {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你不是我的主人，無法使用此功能")).Do()
+					}
+					else{
+					clearMap[sourceId] = true
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，終結模式開始")).Do()	
 				}else if "profile" == message.Text {
 					if source.UserID != "" {
 						profile, err := bot.GetProfile(source.UserID).Do()
