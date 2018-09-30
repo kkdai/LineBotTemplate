@@ -241,9 +241,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}else if "終結開始使用者確認" == message.Text {
 					if source.UserID != user_tenshi {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你不是我的主人，無法使用此功能")).Do()
-					}if source.UserID = user_tenshi {
+					}
+					if source.UserID = user_tenshi {
 					clearMap[sourceId] = true
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，終結模式開始")).Do()	
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，終結模式開始")).Do()
+					}
 				}else if "profile" == message.Text {
 					if source.UserID != "" {
 						profile, err := bot.GetProfile(source.UserID).Do()
