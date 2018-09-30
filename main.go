@@ -245,7 +245,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你滾，這不是你可以用的")).Do()
 					}
 					if source.UserID == user_tenshi{
-			                AwashMaap[sourceId] = false
+			                AwashMap[sourceId] = false
 					clearMap[sourceId] = false
 					washMap[sourceId] = false
 					silentMap[sourceId] = true
