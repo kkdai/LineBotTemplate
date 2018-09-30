@@ -115,7 +115,9 @@ var answers_ReplyQQ = []string{
         }      
 var silentMap = make(map[string]bool) // [UserID/GroupID/RoomID]:bool
 var washMap = make(map[string]bool)
+var AwashMap = make(map[string]bool)
 var clearMap = make(map[string]bool)
+var highCMap = make(map[string]bool)
 //var echoMap = make(map[string]bool)
 
 var loc, _ = time.LoadLocation("Asia/Taipei")
@@ -244,7 +246,47 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}
 					if source.UserID == user_tenshi{
 					clearMap[sourceId] = true
-					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，終結模式開始")).Do()
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，終結模式開始(只不過還在寫 沒完成w）")).Do()
+					}
+				}else if "終結結束使用者確認" == message.Text {
+					if source.UserID != user_tenshi {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你不是我的主人，無法使用此功能")).Do()
+					}
+					if source.UserID == user_tenshi{
+					clearMap[sourceId] = false
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，終結模式結束(只不過還在寫 沒完成w）")).Do()
+					}
+				}else if "使用者確認" == message.Text {
+					if source.UserID != user_tenshi {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你沒有通過認證")).Do()
+					}
+					if source.UserID == user_tenshi{
+					highCMap[sourceId] = true
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，歡迎回家我的主人")).Do()
+					}
+				}else if "結束使用權" == message.Text {
+					if source.UserID != user_tenshi {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你又沒獲得過")).Do()
+					}
+					if source.UserID == user_tenshi{
+					highCMap[sourceId] = false
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，一路小心我的主人")).Do()
+					}
+				}else if "全體洗版允許" == message.Text {
+					if highCMap[sourceId] = false {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("還沒通過使用者認證，請說‘使用者確認’")).Do()
+					}
+					if highCMap[sourceId] = true {
+					AwashMap[sourceId] = true
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("主人確認，已允許全體使用洗版功能")).Do()
+					}
+				}else if "全體洗版關閉" == message.Text {
+					if highCMap[sourceId] = false {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("還沒通過使用者認證，請說‘使用者確認’")).Do()
+					}
+					if highCMap[sourceId] = true {
+					AwashMap[sourceId] = false
+					bot.ReplyMessage(replyToken, linebot.NewTextMessage("主人確認，已關閉全體使用洗版功能")).Do()
 					}
 				}else if "profile" == message.Text {
 					if source.UserID != "" {
@@ -392,9 +434,30 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_Replyyansheng[rand.Intn(len(answers_Replyyansheng))])).Do()
 				} else if strings.Contains(message.Text, "Q") {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyQQ[rand.Intn(len(answers_ReplyQQ))])).Do()
-				} else if washMap[sourceId] != false {
+				} else if AwashMap[sourceId] == true {
+					if message.Text == message.Text{
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
+												    }						    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
+					}else if washMap[sourceId] == true {
+					if highCMap[sourceId] == true{
 					if  message.Text == message.Text{
-						
+						if source.UserID != user_tenshi{
+							washMap[sourceId] = false
+							highCMap[sourceId] = false
+							bot.ReplyMessage(replyToken, linebot.NewTextMessage("檢測到非主人命令，結束一切權限")).Do()
+							
+						}
+						else {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
@@ -407,24 +470,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
-					}	
-				}else if clearMap[sourceId] != false {
-					if  message.Text == message.Text{
-						
-						bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
-						
-				}
+					}
+					}
+					}
+					else {
+						if  message.Text == message.Text{
+							bot.ReplyMessage(replyToken, linebot.NewTextMessage("你沒有通過使用者認證無法使用洗版功能")).Do()
+							washMap[sourceId] = false
+						}
+					}
 					}else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
 				}
