@@ -449,16 +449,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
 					}
-					}else if washMap[sourceId] == true {
+				}else if washMap[sourceId] == true {
 					if highCMap[sourceId] == true{
 					if  message.Text == message.Text{
 						if source.UserID != user_tenshi{
 							washMap[sourceId] = false
 							highCMap[sourceId] = false
 							bot.ReplyMessage(replyToken, linebot.NewTextMessage("檢測到非主人命令，結束一切權限")).Do()
-							
-						}
-						else {
+						                                }
+						if source.UserID == user_tenshi {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
@@ -471,14 +470,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
+					                                       }
 					}
-					}
-					}
-					else {
-						if  message.Text == message.Text{
-							bot.ReplyMessage(replyToken, linebot.NewTextMessage("你沒有通過使用者認證無法使用洗版功能")).Do()
-							washMap[sourceId] = false
-						}
 					}
 					}else if silentMap[sourceId] != true {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_TextMessage[rand.Intn(len(answers_TextMessage))])).Do()
