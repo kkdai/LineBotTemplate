@@ -367,20 +367,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}
 				
 				} else if strings.Contains(message.Text, "滾") {
-					if rand.Intn(100) > 50 {
-						bot.ReplyMessage(replyToken, linebot.NewTextMessage("請神容易送神難, 我偏不要, 嘿嘿")).Do()
-					} else {
-						switch source.Type {
-						case linebot.EventSourceTypeUser:
-							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我想走, 但是我走不了...")).Do()
-						case linebot.EventSourceTypeGroup:
-							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
-							bot.LeaveGroup(source.GroupID).Do()
-						case linebot.EventSourceTypeRoom:
-							bot.ReplyMessage(replyToken, linebot.NewTextMessage("我揮一揮衣袖 不帶走一片雲彩")).Do()
+					if source.UserID != user_tenshi {
+						bot.ReplyMessage(replyToken, linebot.NewTextMessage("你不是我的主人沒資格叫我走")).Do()
+					}if source.UserID == user_tenshi {
 							bot.LeaveRoom(source.RoomID).Do()
-						}
 					}
+						
+					
 				} else if strings.Contains(message.Text, "無恥") {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage(answers_ReplyCurseMessage[rand.Intn(len(answers_ReplyCurseMessage))])).Do()
 				} else if strings.Contains(message.Text, "祥") {
