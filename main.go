@@ -273,18 +273,18 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("使用者確認，一路小心我的主人")).Do()
 					}
 				}else if "全體洗版允許" == message.Text {
-					if highCMap[sourceId] = false {
+					if highCMap[sourceId] == false {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("還沒通過使用者認證，請說‘使用者確認’")).Do()
 					}
-					if highCMap[sourceId] = true {
+					if highCMap[sourceId] == true {
 					AwashMap[sourceId] = true
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("主人確認，已允許全體使用洗版功能")).Do()
 					}
 				}else if "全體洗版關閉" == message.Text {
-					if highCMap[sourceId] = false {
+					if highCMap[sourceId] == false {
 						bot.ReplyMessage(replyToken, linebot.NewTextMessage("還沒通過使用者認證，請說‘使用者確認’")).Do()
 					}
-					if highCMap[sourceId] = true {
+					if highCMap[sourceId] == true {
 					AwashMap[sourceId] = false
 					bot.ReplyMessage(replyToken, linebot.NewTextMessage("主人確認，已關閉全體使用洗版功能")).Do()
 					}
@@ -447,7 +447,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
 												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+
-												    }						    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
+												    message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text+message.Text)).Do()
+					}
 					}else if washMap[sourceId] == true {
 					if highCMap[sourceId] == true{
 					if  message.Text == message.Text{
