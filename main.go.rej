@@ -4,6 +4,6 @@ diff a/main.go b/main.go	(rejected hunks)
  			switch message := event.Message.(type) {
  			case *linebot.TextMessage:
 -				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
- 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" 0.0!")).Do(); err != nil {
+ 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" 0.0!00")).Do(); err != nil {
  					log.Print(err)
  				}
