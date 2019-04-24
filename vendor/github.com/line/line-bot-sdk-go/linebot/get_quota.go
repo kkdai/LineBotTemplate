@@ -16,38 +16,33 @@ package linebot
 
 import (
 	"context"
-	"fmt"
 )
 
-// GetMessageContent method
-func (client *Client) GetMessageContent(messageID string) *GetMessageContentCall {
-	return &GetMessageContentCall{
-		c:         client,
-		messageID: messageID,
+// GetMessageQuota method
+func (client *Client) GetMessageQuota() *GetMessageQuotaCall {
+	return &GetMessageQuotaCall{
+		c: client,
 	}
 }
 
-// GetMessageContentCall type
-type GetMessageContentCall struct {
+// GetMessageQuotaCall type
+type GetMessageQuotaCall struct {
 	c   *Client
 	ctx context.Context
-
-	messageID string
 }
 
 // WithContext method
-func (call *GetMessageContentCall) WithContext(ctx context.Context) *GetMessageContentCall {
+func (call *GetMessageQuotaCall) WithContext(ctx context.Context) *GetMessageQuotaCall {
 	call.ctx = ctx
 	return call
 }
 
 // Do method
-func (call *GetMessageContentCall) Do() (*MessageContentResponse, error) {
-	endpoint := fmt.Sprintf(APIEndpointGetMessageContent, call.messageID)
-	res, err := call.c.get(call.ctx, endpoint, nil)
+func (call *GetMessageQuotaCall) Do() (*MessageQuotaResponse, error) {
+	res, err := call.c.get(call.ctx, APIEndpointGetMessageQuota, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer closeResponse(res)
-	return decodeToMessageContentResponse(res)
+	return decodeToMessageQuotaResponse(res)
 }

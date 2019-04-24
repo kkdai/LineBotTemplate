@@ -25,14 +25,17 @@ type EventType string
 
 // EventType constants
 const (
-	EventTypeMessage     EventType = "message"
-	EventTypeFollow      EventType = "follow"
-	EventTypeUnfollow    EventType = "unfollow"
-	EventTypeJoin        EventType = "join"
-	EventTypeLeave       EventType = "leave"
-	EventTypePostback    EventType = "postback"
-	EventTypeBeacon      EventType = "beacon"
-	EventTypeAccountLink EventType = "accountLink"
+	EventTypeMessage      EventType = "message"
+	EventTypeFollow       EventType = "follow"
+	EventTypeUnfollow     EventType = "unfollow"
+	EventTypeJoin         EventType = "join"
+	EventTypeLeave        EventType = "leave"
+	EventTypeMemberJoined EventType = "memberJoined"
+	EventTypeMemberLeft   EventType = "memberLeft"
+	EventTypePostback     EventType = "postback"
+	EventTypeBeacon       EventType = "beacon"
+	EventTypeAccountLink  EventType = "accountLink"
+	EventTypeThings       EventType = "things"
 )
 
 // EventSourceType type
@@ -58,6 +61,11 @@ type Params struct {
 	Date     string `json:"date,omitempty"`
 	Time     string `json:"time,omitempty"`
 	Datetime string `json:"datetime,omitempty"`
+}
+
+// Members type
+type Members struct {
+	Members []EventSource `json:"members"`
 }
 
 // Postback type
@@ -98,6 +106,12 @@ type AccountLink struct {
 	Nonce  string
 }
 
+// Things type
+type Things struct {
+	DeviceID string `json:"deviceId"`
+	Type     string `json:"type"`
+}
+
 // Event type
 type Event struct {
 	ReplyToken  string
@@ -105,20 +119,31 @@ type Event struct {
 	Timestamp   time.Time
 	Source      *EventSource
 	Message     Message
+	Joined      *Members
+	Left        *Members
 	Postback    *Postback
 	Beacon      *Beacon
 	AccountLink *AccountLink
+	Things      *Things
+	Members     []*EventSource
 }
 
 type rawEvent struct {
-	ReplyToken  string           `json:"replyToken,omitempty"`
-	Type        EventType        `json:"type"`
-	Timestamp   int64            `json:"timestamp"`
-	Source      *EventSource     `json:"source"`
-	Message     *rawEventMessage `json:"message,omitempty"`
-	*Postback   `json:"postback,omitempty"`
+	ReplyToken  string               `json:"replyToken,omitempty"`
+	Type        EventType            `json:"type"`
+	Timestamp   int64                `json:"timestamp"`
+	Source      *EventSource         `json:"source"`
+	Message     *rawEventMessage     `json:"message,omitempty"`
+	Postback    *Postback            `json:"postback,omitempty"`
 	Beacon      *rawBeaconEvent      `json:"beacon,omitempty"`
 	AccountLink *rawAccountLinkEvent `json:"link,omitempty"`
+	Joined      *rawMemberEvent      `json:"joined,omitempty"`
+	Left        *rawMemberEvent      `json:"left,omitempty"`
+	Things      *Things              `json:"things,omitempty"`
+}
+
+type rawMemberEvent struct {
+	Members []*EventSource `json:"members"`
 }
 
 type rawEventMessage struct {
@@ -175,6 +200,22 @@ func (e *Event) MarshalJSON() ([]byte, error) {
 		}
 	}
 
+	switch e.Type {
+	case EventTypeMemberJoined:
+		raw.Joined = &rawMemberEvent{
+			Members: e.Members,
+		}
+	case EventTypeMemberLeft:
+		raw.Left = &rawMemberEvent{
+			Members: e.Members,
+		}
+	case EventTypeThings:
+		raw.Things = &Things{
+			DeviceID: e.Things.DeviceID,
+			Type:     e.Things.Type,
+		}
+	}
+
 	switch m := e.Message.(type) {
 	case *TextMessage:
 		raw.Message = &rawEventMessage{
@@ -197,6 +238,13 @@ func (e *Event) MarshalJSON() ([]byte, error) {
 			Type:     MessageTypeAudio,
 			ID:       m.ID,
 			Duration: m.Duration,
+		}
+	case *FileMessage:
+		raw.Message = &rawEventMessage{
+			Type:     MessageTypeFile,
+			ID:       m.ID,
+			FileName: m.FileName,
+			FileSize: m.FileSize,
 		}
 	case *LocationMessage:
 		raw.Message = &rawEventMessage{
@@ -290,6 +338,14 @@ func (e *Event) UnmarshalJSON(body []byte) (err error) {
 			Result: rawEvent.AccountLink.Result,
 			Nonce:  rawEvent.AccountLink.Nonce,
 		}
+	case EventTypeMemberJoined:
+		e.Members = rawEvent.Joined.Members
+	case EventTypeMemberLeft:
+		e.Members = rawEvent.Left.Members
+	case EventTypeThings:
+		e.Things = new(Things)
+		e.Things.Type = rawEvent.Things.Type
+		e.Things.DeviceID = rawEvent.Things.DeviceID
 	}
 	return
 }

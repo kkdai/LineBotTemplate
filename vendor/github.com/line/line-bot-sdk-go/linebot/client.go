@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
@@ -31,6 +32,7 @@ const (
 	APIEndpointReplyMessage          = "/v2/bot/message/reply"
 	APIEndpointMulticast             = "/v2/bot/message/multicast"
 	APIEndpointGetMessageContent     = "/v2/bot/message/%s/content"
+	APIEndpointGetMessageQuota       = "/v2/bot/message/quota"
 	APIEndpointLeaveGroup            = "/v2/bot/group/%s/leave"
 	APIEndpointLeaveRoom             = "/v2/bot/room/%s/leave"
 	APIEndpointGetProfile            = "/v2/bot/profile/%s"
@@ -45,8 +47,12 @@ const (
 	APIEndpointGetUserRichMenu       = "/v2/bot/user/%s/richmenu"
 	APIEndpointLinkUserRichMenu      = "/v2/bot/user/%s/richmenu/%s"
 	APIEndpointUnlinkUserRichMenu    = "/v2/bot/user/%s/richmenu"
+	APIEndpointSetDefaultRichMenu    = "/v2/bot/user/all/richmenu/%s"
+	APIEndpointDefaultRichMenu       = "/v2/bot/user/all/richmenu"   // Get: GET / Delete: DELETE
 	APIEndpointDownloadRichMenuImage = "/v2/bot/richmenu/%s/content" // Download: GET / Upload: POST
 	APIEndpointUploadRichMenuImage   = "/v2/bot/richmenu/%s/content" // Download: GET / Upload: POST
+	APIEndpointBulkLinkRichMenu      = "/v2/bot/richmenu/bulk/link"
+	APIEndpointBulkUnlinkRichMenu    = "/v2/bot/richmenu/bulk/unlink"
 
 	APIEndpointGetAllLIFFApps = "/liff/v1/apps"
 	APIEndpointAddLIFFApp     = "/liff/v1/apps"
@@ -54,6 +60,8 @@ const (
 	APIEndpointDeleteLIFFApp  = "/liff/v1/apps/%s"
 
 	APIEndpointLinkToken = "/v2/bot/user/%s/linkToken"
+
+	APIEndpointGetMessageDelivery = "/v2/bot/message/delivery/%s"
 )
 
 // Client type
@@ -176,4 +184,10 @@ func (client *Client) delete(ctx context.Context, endpoint string) (*http.Respon
 		return nil, err
 	}
 	return client.do(ctx, req)
+}
+
+func closeResponse(res *http.Response) error {
+	defer res.Body.Close()
+	_, err := io.Copy(ioutil.Discard, res.Body)
+	return err
 }
