@@ -56,8 +56,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func SendTxtMessage(ReplyToken, Text) error {
+func SendTxtMessage(ReplyToken, Text string) error {
 	if _, err = bot.ReplyMessage(ReplyToken, linebot.NewTextMessage(Text).Do(); err != nil {
 		log.Print(err)
+		return err
 	}
+	return nil
 }
