@@ -81,7 +81,7 @@ func SendTextMessage(ReplyToken, Text string) {
 	}
 }
 
-func SendAnyMessage(ReplyToken string, Message string) {
+func SendAnyMessage(ReplyToken string, Message linebot.SendingMessage) {
 	_, err := bot.ReplyMessage(ReplyToken, Message).Do()
 	if (err != nil) {
 		log.Print(err)
