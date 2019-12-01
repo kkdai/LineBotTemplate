@@ -47,37 +47,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, event := range events {
-		log.Printf("Got event %v", event)
-		switch event.Type {
-		case linebot.EventTypeMessage:
+		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				if err := app.handleText(message, event.ReplyToken, event.Source); err != nil {
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text).Do(); err != nil {
 					log.Print(err)
 				}
-			case linebot.EventTypeFollow:
-				if err := app.replyText(event.ReplyToken, "歡迎你加入!"); err != nil {
-					log.Print(err)
-				}
-			/*case linebot.EventTypePostback:
-				data := event.Postback.Data
-				if data == "DATE" || data == "TIME" || data == "DATETIME" {
-					data += fmt.Sprintf("(%v)", *event.Postback.Params)
-				}
-				if err := app.replyText(event.ReplyToken, "Got postback: "+data); err != nil {
-					log.Print(err)
-				}*/
 			}
 		}
 	}
-}
-
-func (app *KitchenSink) replyText(replyToken, text string) error {
-	if _, err := app.bot.ReplyMessage(
-		replyToken,
-		linebot.NewTextMessage(text),
-	).Do(); err != nil {
-		return err
-	}
-	return nil
 }
