@@ -55,6 +55,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err := app.handleText(message, event.ReplyToken, event.Source); err != nil {
 					log.Print(err)
 				}
+			}
 		case linebot.EventTypeFollow:
 			if err := app.replyText(event.ReplyToken, "歡迎你加入!"); err != nil {
 				log.Print(err)
