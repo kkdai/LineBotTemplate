@@ -71,7 +71,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *KitchenSink) replyText(replyToken, text string) error {
+func (app *KitchenSink) replyText(replyToken string, text string) error {
 	if _, err := app.bot.ReplyMessage(
 		replyToken,
 		linebot.NewTextMessage(text),
