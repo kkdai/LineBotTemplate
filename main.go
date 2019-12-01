@@ -48,7 +48,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
-			switch message := event.Message.(type) {
+			switch _ := event.Message.(type) {
 			case *linebot.TextMessage:
 				//SendTextMessage(event.ReplyToken, message.Text)
 				contents := &linebot.BubbleContainer{
@@ -74,7 +74,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func SendTextMessage(ReplyToken, Text string) {
+func SendTextMessage(ReplyToken, Text linebot.SendingMessage) {
 	_, err := bot.ReplyMessage(ReplyToken, linebot.NewTextMessage(Text)).Do()
 	if (err != nil) {
 		log.Print(err)
