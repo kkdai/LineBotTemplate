@@ -50,14 +50,39 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				SendTxtMessage(event.ReplyToken, message.Text)
+				//SendTextMessage(event.ReplyToken, message.Text)
+				contents := &linebot.BubbleContainer{
+					Type: linebot.FlexContainerTypeBubble,
+					Body: &linebot.BoxComponent{
+						Type:   linebot.FlexComponentTypeBox,
+						Layout: linebot.FlexBoxLayoutTypeHorizontal,
+						Contents: []linebot.FlexComponent{
+							&linebot.TextComponent{
+								Type: linebot.FlexComponentTypeText,
+								Text: "Hello,",
+							},
+							&linebot.TextComponent{
+								Type: linebot.FlexComponentTypeText,
+								Text: "World!",
+							},
+						},
+					},
+				}
+				SendAnyMessage(event.ReplyToken, linebot.NewFlexMessage("Flex message alt text", contents))
 			}
 		}
 	}
 }
 
-func SendTxtMessage(ReplyToken, Text string) {
+func SendTextMessage(ReplyToken, Text string) {
 	_, err := bot.ReplyMessage(ReplyToken, linebot.NewTextMessage(Text)).Do()
+	if (err != nil) {
+		log.Print(err)
+	}
+}
+
+func SendAnyMessage(ReplyToken string, Message string) {
+	_, err := bot.ReplyMessage(ReplyToken, Message).Do()
 	if (err != nil) {
 		log.Print(err)
 	}
