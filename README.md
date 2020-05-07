@@ -27,8 +27,6 @@ Installation and Usage
 - Input `Channel Secret` and `Channel Access Token`.
 - Remember your heroku, ID.
 
-<br><br>
-
 ### 3. Go to LINE Bot Dashboard, setup basic API
 
 - Setup your basic account information. Here is some info you will need to know.
