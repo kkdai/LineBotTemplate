@@ -39,7 +39,7 @@ It all done.
 
 ### Video Tutorial:
 
-- [How to deploy LINE BotTemplate](https://www.youtube.com/watch?v=xpP51Kwuy2U)
+- [How to deploy LINE BotTemplate](https://www.youtube.com/watch?v=0BIknEz1f8k)
 - [Hoe to modify your LINE BotTemplate code](https://www.youtube.com/watch?v=ckij73sIRik)
 
 
