@@ -1,11 +1,10 @@
 language: go
 
 go:
-    - "1.12.2"
+    - "1.14"
     - tip
 
 before_install:
 
 script:
     - go test -bench=. -benchmem ./...
-    #- sh ./install_all_cmd.sh

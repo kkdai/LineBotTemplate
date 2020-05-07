@@ -21,14 +21,24 @@ import (
 // GetMessageQuota method
 func (client *Client) GetMessageQuota() *GetMessageQuotaCall {
 	return &GetMessageQuotaCall{
-		c: client,
+		c:        client,
+		endpoint: APIEndpointGetMessageQuota,
+	}
+}
+
+// GetMessageQuotaConsumption method
+func (client *Client) GetMessageQuotaConsumption() *GetMessageQuotaCall {
+	return &GetMessageQuotaCall{
+		c:        client,
+		endpoint: APIEndpointGetMessageQuotaConsumption,
 	}
 }
 
 // GetMessageQuotaCall type
 type GetMessageQuotaCall struct {
-	c   *Client
-	ctx context.Context
+	c        *Client
+	ctx      context.Context
+	endpoint string
 }
 
 // WithContext method
@@ -39,10 +49,39 @@ func (call *GetMessageQuotaCall) WithContext(ctx context.Context) *GetMessageQuo
 
 // Do method
 func (call *GetMessageQuotaCall) Do() (*MessageQuotaResponse, error) {
-	res, err := call.c.get(call.ctx, APIEndpointGetMessageQuota, nil)
+	res, err := call.c.get(call.ctx, call.c.endpointBase, call.endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer closeResponse(res)
 	return decodeToMessageQuotaResponse(res)
+}
+
+// GetMessageConsumption method
+func (client *Client) GetMessageConsumption() *GetMessageConsumptionCall {
+	return &GetMessageConsumptionCall{
+		c: client,
+	}
+}
+
+// GetMessageConsumptionCall type
+type GetMessageConsumptionCall struct {
+	c   *Client
+	ctx context.Context
+}
+
+// WithContext method
+func (call *GetMessageConsumptionCall) WithContext(ctx context.Context) *GetMessageConsumptionCall {
+	call.ctx = ctx
+	return call
+}
+
+// Do method
+func (call *GetMessageConsumptionCall) Do() (*MessageConsumptionResponse, error) {
+	res, err := call.c.get(call.ctx, call.c.endpointBase, APIEndpointGetMessageConsumption, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer closeResponse(res)
+	return decodeToMessageConsumptionResponse(res)
 }

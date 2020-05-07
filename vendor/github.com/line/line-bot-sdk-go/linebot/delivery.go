@@ -28,6 +28,7 @@ const (
 	DeliveryTypeMulticast DeliveryType = "multicast"
 	DeliveryTypePush      DeliveryType = "push"
 	DeliveryTypeReply     DeliveryType = "reply"
+	DeliveryTypeBroadcast DeliveryType = "broadcast"
 )
 
 // GetNumberReplyMessages method
@@ -57,6 +58,15 @@ func (client *Client) GetNumberMulticastMessages(date string) *GetNumberMessages
 	}
 }
 
+// GetNumberBroadcastMessages method
+func (client *Client) GetNumberBroadcastMessages(date string) *GetNumberMessagesCall {
+	return &GetNumberMessagesCall{
+		c:            client,
+		date:         date,
+		deliveryType: DeliveryTypeBroadcast,
+	}
+}
+
 // GetNumberMessagesCall type
 type GetNumberMessagesCall struct {
 	c   *Client
@@ -79,7 +89,7 @@ func (call *GetNumberMessagesCall) Do() (*MessagesNumberResponse, error) {
 	if call.date != "" {
 		q = url.Values{"date": []string{call.date}}
 	}
-	res, err := call.c.get(call.ctx, endpoint, q)
+	res, err := call.c.get(call.ctx, call.c.endpointBase, endpoint, q)
 	if err != nil {
 		return nil, err
 	}

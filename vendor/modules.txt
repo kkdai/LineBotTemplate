@@ -1,0 +1,5 @@
+# github.com/line/line-bot-sdk-go v7.3.0+incompatible
+## explicit
+github.com/line/line-bot-sdk-go/linebot
+# golang.org/x/net v0.0.0-20161109213706-9ef22118a4b2
+## explicit

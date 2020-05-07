@@ -38,6 +38,15 @@ const (
 	EventTypeThings       EventType = "things"
 )
 
+// EventMode type
+type EventMode string
+
+// EventMode constants
+const (
+	EventModeActive  EventMode = "active"
+	EventModeStandby EventMode = "standby"
+)
+
 // EventSourceType type
 type EventSourceType string
 
@@ -82,6 +91,7 @@ const (
 	BeaconEventTypeEnter  BeaconEventType = "enter"
 	BeaconEventTypeLeave  BeaconEventType = "leave"
 	BeaconEventTypeBanner BeaconEventType = "banner"
+	BeaconEventTypeStay   BeaconEventType = "stay"
 )
 
 // Beacon type
@@ -106,16 +116,69 @@ type AccountLink struct {
 	Nonce  string
 }
 
+// ThingsResult type
+type ThingsResult struct {
+	ScenarioID             string
+	Revision               int
+	StartTime              int64
+	EndTime                int64
+	ResultCode             ThingsResultCode
+	ActionResults          []*ThingsActionResult
+	BLENotificationPayload []byte
+	ErrorReason            string
+}
+
+// ThingsResultCode type
+type ThingsResultCode string
+
+// ThingsResultCode constsnts
+const (
+	ThingsResultCodeSuccess      ThingsResultCode = "success"
+	ThingsResultCodeGattError    ThingsResultCode = "gatt_error"
+	ThingsResultCodeRuntimeError ThingsResultCode = "runtime_error"
+)
+
+// ThingsActionResult type
+type ThingsActionResult struct {
+	Type ThingsActionResultType
+	Data []byte
+}
+
+// ThingsActionResultType type
+type ThingsActionResultType string
+
+// ThingsActionResultType contants
+const (
+	ThingsActionResultTypeBinary ThingsActionResultType = "binary"
+	ThingsActionResultTypeVoid   ThingsActionResultType = "void"
+)
+
 // Things type
 type Things struct {
-	DeviceID string `json:"deviceId"`
-	Type     string `json:"type"`
+	DeviceID string
+	Type     string
+	Result   *ThingsResult
 }
+
+// StickerResourceType type
+type StickerResourceType string
+
+// StickerResourceType constants
+const (
+	StickerResourceTypeStatic         StickerResourceType = "STATIC"
+	StickerResourceTypeAnimation      StickerResourceType = "ANIMATION"
+	StickerResourceTypeSound          StickerResourceType = "SOUND"
+	StickerResourceTypeAnimationSound StickerResourceType = "ANIMATION_SOUND"
+	StickerResourceTypePopup          StickerResourceType = "POPUP"
+	StickerResourceTypePopupSound     StickerResourceType = "POPUP_SOUND"
+	StickerResourceTypeNameText       StickerResourceType = "NAME_TEXT"
+)
 
 // Event type
 type Event struct {
 	ReplyToken  string
 	Type        EventType
+	Mode        EventMode
 	Timestamp   time.Time
 	Source      *EventSource
 	Message     Message
@@ -131,6 +194,7 @@ type Event struct {
 type rawEvent struct {
 	ReplyToken  string               `json:"replyToken,omitempty"`
 	Type        EventType            `json:"type"`
+	Mode        EventMode            `json:"mode"`
 	Timestamp   int64                `json:"timestamp"`
 	Source      *EventSource         `json:"source"`
 	Message     *rawEventMessage     `json:"message,omitempty"`
@@ -139,7 +203,7 @@ type rawEvent struct {
 	AccountLink *rawAccountLinkEvent `json:"link,omitempty"`
 	Joined      *rawMemberEvent      `json:"joined,omitempty"`
 	Left        *rawMemberEvent      `json:"left,omitempty"`
-	Things      *Things              `json:"things,omitempty"`
+	Things      *rawThingsEvent      `json:"things,omitempty"`
 }
 
 type rawMemberEvent struct {
@@ -147,18 +211,19 @@ type rawMemberEvent struct {
 }
 
 type rawEventMessage struct {
-	ID        string      `json:"id"`
-	Type      MessageType `json:"type"`
-	Text      string      `json:"text,omitempty"`
-	Duration  int         `json:"duration,omitempty"`
-	Title     string      `json:"title,omitempty"`
-	Address   string      `json:"address,omitempty"`
-	FileName  string      `json:"fileName,omitempty"`
-	FileSize  int         `json:"fileSize,omitempty"`
-	Latitude  float64     `json:"latitude,omitempty"`
-	Longitude float64     `json:"longitude,omitempty"`
-	PackageID string      `json:"packageId,omitempty"`
-	StickerID string      `json:"stickerId,omitempty"`
+	ID                  string              `json:"id"`
+	Type                MessageType         `json:"type"`
+	Text                string              `json:"text,omitempty"`
+	Duration            int                 `json:"duration,omitempty"`
+	Title               string              `json:"title,omitempty"`
+	Address             string              `json:"address,omitempty"`
+	FileName            string              `json:"fileName,omitempty"`
+	FileSize            int                 `json:"fileSize,omitempty"`
+	Latitude            float64             `json:"latitude,omitempty"`
+	Longitude           float64             `json:"longitude,omitempty"`
+	PackageID           string              `json:"packageId,omitempty"`
+	StickerID           string              `json:"stickerId,omitempty"`
+	StickerResourceType StickerResourceType `json:"stickerResourceType,omitempty"`
 }
 
 type rawBeaconEvent struct {
@@ -172,6 +237,28 @@ type rawAccountLinkEvent struct {
 	Nonce  string            `json:"nonce"`
 }
 
+type rawThingsResult struct {
+	ScenarioID             string                   `json:"scenarioId"`
+	Revision               int                      `json:"revision"`
+	StartTime              int64                    `json:"startTime"`
+	EndTime                int64                    `json:"endTime"`
+	ResultCode             ThingsResultCode         `json:"resultCode"`
+	ActionResults          []*rawThingsActionResult `json:"actionResults"`
+	BLENotificationPayload string                   `json:"bleNotificationPayload,omitempty"`
+	ErrorReason            string                   `json:"errorReason,omitempty"`
+}
+
+type rawThingsActionResult struct {
+	Type ThingsActionResultType `json:"type,omitempty"`
+	Data string                 `json:"data,omitempty"`
+}
+
+type rawThingsEvent struct {
+	DeviceID string           `json:"deviceId"`
+	Type     string           `json:"type"`
+	Result   *rawThingsResult `json:"result,omitempty"`
+}
+
 const (
 	millisecPerSec     = int64(time.Second / time.Millisecond)
 	nanosecPerMillisec = int64(time.Millisecond / time.Nanosecond)
@@ -182,6 +269,7 @@ func (e *Event) MarshalJSON() ([]byte, error) {
 	raw := rawEvent{
 		ReplyToken: e.ReplyToken,
 		Type:       e.Type,
+		Mode:       e.Mode,
 		Timestamp:  e.Timestamp.Unix()*millisecPerSec + int64(e.Timestamp.Nanosecond())/int64(time.Millisecond),
 		Source:     e.Source,
 		Postback:   e.Postback,
@@ -210,9 +298,30 @@ func (e *Event) MarshalJSON() ([]byte, error) {
 			Members: e.Members,
 		}
 	case EventTypeThings:
-		raw.Things = &Things{
+		raw.Things = &rawThingsEvent{
 			DeviceID: e.Things.DeviceID,
 			Type:     e.Things.Type,
+		}
+		if e.Things.Result != nil {
+			raw.Things.Result = &rawThingsResult{
+				ScenarioID: e.Things.Result.ScenarioID,
+				Revision:   e.Things.Result.Revision,
+				StartTime:  e.Things.Result.StartTime,
+				EndTime:    e.Things.Result.EndTime,
+				ResultCode: e.Things.Result.ResultCode,
+
+				BLENotificationPayload: string(e.Things.Result.BLENotificationPayload),
+				ErrorReason:            e.Things.Result.ErrorReason,
+			}
+			if e.Things.Result.ActionResults != nil {
+				raw.Things.Result.ActionResults = make([]*rawThingsActionResult, len(e.Things.Result.ActionResults))
+			}
+			for i := range e.Things.Result.ActionResults {
+				raw.Things.Result.ActionResults[i] = &rawThingsActionResult{
+					Type: e.Things.Result.ActionResults[i].Type,
+					Data: string(e.Things.Result.ActionResults[i].Data),
+				}
+			}
 		}
 	}
 
@@ -257,10 +366,11 @@ func (e *Event) MarshalJSON() ([]byte, error) {
 		}
 	case *StickerMessage:
 		raw.Message = &rawEventMessage{
-			Type:      MessageTypeSticker,
-			ID:        m.ID,
-			PackageID: m.PackageID,
-			StickerID: m.StickerID,
+			Type:                MessageTypeSticker,
+			ID:                  m.ID,
+			PackageID:           m.PackageID,
+			StickerID:           m.StickerID,
+			StickerResourceType: m.StickerResourceType,
 		}
 	}
 	return json.Marshal(&raw)
@@ -275,6 +385,7 @@ func (e *Event) UnmarshalJSON(body []byte) (err error) {
 
 	e.ReplyToken = rawEvent.ReplyToken
 	e.Type = rawEvent.Type
+	e.Mode = rawEvent.Mode
 	e.Timestamp = time.Unix(rawEvent.Timestamp/millisecPerSec, (rawEvent.Timestamp%millisecPerSec)*nanosecPerMillisec).UTC()
 	e.Source = rawEvent.Source
 
@@ -315,9 +426,10 @@ func (e *Event) UnmarshalJSON(body []byte) (err error) {
 			}
 		case MessageTypeSticker:
 			e.Message = &StickerMessage{
-				ID:        rawEvent.Message.ID,
-				PackageID: rawEvent.Message.PackageID,
-				StickerID: rawEvent.Message.StickerID,
+				ID:                  rawEvent.Message.ID,
+				PackageID:           rawEvent.Message.PackageID,
+				StickerID:           rawEvent.Message.StickerID,
+				StickerResourceType: rawEvent.Message.StickerResourceType,
 			}
 		}
 	case EventTypePostback:
@@ -343,9 +455,29 @@ func (e *Event) UnmarshalJSON(body []byte) (err error) {
 	case EventTypeMemberLeft:
 		e.Members = rawEvent.Left.Members
 	case EventTypeThings:
-		e.Things = new(Things)
-		e.Things.Type = rawEvent.Things.Type
-		e.Things.DeviceID = rawEvent.Things.DeviceID
+		e.Things = &Things{
+			Type:     rawEvent.Things.Type,
+			DeviceID: rawEvent.Things.DeviceID,
+		}
+		if rawEvent.Things.Result != nil {
+			rawResult := rawEvent.Things.Result
+			e.Things.Result = &ThingsResult{
+				ScenarioID:             rawResult.ScenarioID,
+				Revision:               rawResult.Revision,
+				StartTime:              rawResult.StartTime,
+				EndTime:                rawResult.EndTime,
+				ResultCode:             rawResult.ResultCode,
+				ActionResults:          make([]*ThingsActionResult, len(rawResult.ActionResults)),
+				BLENotificationPayload: []byte(rawResult.BLENotificationPayload),
+				ErrorReason:            rawResult.ErrorReason,
+			}
+			for i := range rawResult.ActionResults {
+				e.Things.Result.ActionResults[i] = &ThingsActionResult{
+					Type: rawResult.ActionResults[i].Type,
+					Data: []byte(rawResult.ActionResults[i].Data),
+				}
+			}
+		}
 	}
 	return
 }

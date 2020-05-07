@@ -24,6 +24,7 @@ import (
 
 // BasicResponse type
 type BasicResponse struct {
+	RequestID string
 }
 
 type errorResponseDetail struct {
@@ -66,8 +67,130 @@ type MessagesNumberResponse struct {
 
 // MessageQuotaResponse type
 type MessageQuotaResponse struct {
-	Type  string
-	Value int64
+	Type       string
+	Value      int64
+	TotalUsage int64 `json:"totalUsage"`
+}
+
+// MessageConsumptionResponse type
+type MessageConsumptionResponse struct {
+	TotalUsage int64
+}
+
+// MessagesNumberDeliveryResponse type
+type MessagesNumberDeliveryResponse struct {
+	Status          string `json:"status"`
+	Broadcast       int64  `json:"broadcast"`
+	Targeting       int64  `json:"targeting"`
+	AutoResponse    int64  `json:"autoResponse"`
+	WelcomeResponse int64  `json:"welcomeResponse"`
+	Chat            int64  `json:"chat"`
+	APIBroadcast    int64  `json:"apiBroadcast"`
+	APIPush         int64  `json:"apiPush"`
+	APIMulticast    int64  `json:"apiMulticast"`
+	APINarrowcast   int64  `json:"apiNarrowcast"`
+	APIReply        int64  `json:"apiReply"`
+}
+
+// MessagesNumberFollowersResponse type
+type MessagesNumberFollowersResponse struct {
+	Status          string `json:"status"`
+	Followers       int64  `json:"followers"`
+	TargetedReaches int64  `json:"targetedReaches"`
+	Blocks          int64  `json:"blocks"`
+}
+
+// MessagesProgressResponse type
+type MessagesProgressResponse struct {
+	Phase             string `json:"phase"`
+	SuccessCount      int64  `json:"successCount"`
+	FailureCount      int64  `json:"failureCount"`
+	TargetCount       int64  `json:"targetCount"`
+	FailedDescription string `json:"failedDescription"`
+	ErrorCode         int    `json:"errorCode"`
+}
+
+// MessagesFriendDemographicsResponse type
+type MessagesFriendDemographicsResponse struct {
+	Available           bool                       `json:"available"`
+	Genders             []GenderDetail             `json:"genders"`
+	Ages                []AgeDetail                `json:"ages"`
+	Areas               []AreasDetail              `json:"areas"`
+	AppTypes            []AppTypeDetail            `json:"appTypes"`
+	SubscriptionPeriods []SubscriptionPeriodDetail `json:"subscriptionPeriods"`
+}
+
+// GenderDetail type
+type GenderDetail struct {
+	Gender     string  `json:"gender"`
+	Percentage float64 `json:"percentage"`
+}
+
+// AgeDetail type
+type AgeDetail struct {
+	Age        string  `json:"age"`
+	Percentage float64 `json:"percentage"`
+}
+
+// AreasDetail type
+type AreasDetail struct {
+	Area       string  `json:"area"`
+	Percentage float64 `json:"percentage"`
+}
+
+// AppTypeDetail type
+type AppTypeDetail struct {
+	AppType    string  `json:"appType"`
+	Percentage float64 `json:"percentage"`
+}
+
+// SubscriptionPeriodDetail type
+type SubscriptionPeriodDetail struct {
+	SubscriptionPeriod string  `json:"subscriptionPeriod"`
+	Percentage         float64 `json:"percentage"`
+}
+
+// MessagesUserInteractionStatsResponse type
+type MessagesUserInteractionStatsResponse struct {
+	Overview OverviewDetail  `json:"overview"`
+	Messages []MessageDetail `json:"messages"`
+	Clicks   []ClickDetail   `json:"clicks"`
+}
+
+// OverviewDetail type
+type OverviewDetail struct {
+	RequestID                   string `json:"requestId"`
+	Timestamp                   int64  `json:"timestamp"`
+	Delivered                   int64  `json:"delivered"`
+	UniqueImpression            int64  `json:"uniqueImpression"`
+	UniqueClick                 int64  `json:"uniqueClick"`
+	UniqueMediaPlayed           int64  `json:"uniqueMediaPlayed"`
+	UniqueMediaPlayed100Percent int64  `json:"uniqueMediaPlayed100Percent"`
+}
+
+// MessageDetail type
+type MessageDetail struct {
+	Seq                         int64 `json:"seq"`
+	Impression                  int64 `json:"impression"`
+	MediaPlayed                 int64 `json:"mediaPlayed"`
+	MediaPlayed25Percent        int64 `json:"mediaPlayed25Percent"`
+	MediaPlayed50Percent        int64 `json:"mediaPlayed50Percent"`
+	MediaPlayed75Percent        int64 `json:"mediaPlayed75Percent"`
+	MediaPlayed100Percent       int64 `json:"mediaPlayed100Percent"`
+	UniqueMediaPlayed           int64 `json:"uniqueMediaPlayed"`
+	UniqueMediaPlayed25Percent  int64 `json:"uniqueMediaPlayed25Percent"`
+	UniqueMediaPlayed50Percent  int64 `json:"uniqueMediaPlayed50Percent"`
+	UniqueMediaPlayed75Percent  int64 `json:"uniqueMediaPlayed75Percent"`
+	UniqueMediaPlayed100Percent int64 `json:"uniqueMediaPlayed100Percent"`
+}
+
+// ClickDetail type
+type ClickDetail struct {
+	Seq                  int64  `json:"seq"`
+	URL                  string `json:"url"`
+	Click                int64  `json:"click"`
+	UniqueClick          int64  `json:"uniqueClick"`
+	UniqueClickOfRequest int64  `json:"uniqueClickOfRequest"`
 }
 
 // RichMenuIDResponse type
@@ -106,6 +229,13 @@ func isSuccess(code int) bool {
 	return code/100 == 2
 }
 
+// AccessTokenResponse type
+type AccessTokenResponse struct {
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int64  `json:"expires_in"`
+	TokenType   string `json:"token_type"`
+}
+
 func checkResponse(res *http.Response) error {
 	if isSuccess(res.StatusCode) {
 		return nil
@@ -128,7 +258,9 @@ func decodeToBasicResponse(res *http.Response) (*BasicResponse, error) {
 		return nil, err
 	}
 	decoder := json.NewDecoder(res.Body)
-	result := BasicResponse{}
+	result := BasicResponse{
+		RequestID: res.Header.Get("X-Line-Request-Id"),
+	}
 	if err := decoder.Decode(&result); err != nil {
 		if err == io.EOF {
 			return &result, nil
@@ -184,6 +316,18 @@ func decodeToMessageQuotaResponse(res *http.Response) (*MessageQuotaResponse, er
 	}
 	decoder := json.NewDecoder(res.Body)
 	result := &MessageQuotaResponse{}
+	if err := decoder.Decode(result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func decodeToMessageConsumptionResponse(res *http.Response) (*MessageConsumptionResponse, error) {
+	if err := checkResponse(res); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(res.Body)
+	result := &MessageConsumptionResponse{}
 	if err := decoder.Decode(result); err != nil {
 		return nil, err
 	}
@@ -270,6 +414,78 @@ func decodeToMessagesNumberResponse(res *http.Response) (*MessagesNumberResponse
 	}
 	decoder := json.NewDecoder(res.Body)
 	result := MessagesNumberResponse{}
+	if err := decoder.Decode(&result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func decodeToMessagesNumberDeliveryResponse(res *http.Response) (*MessagesNumberDeliveryResponse, error) {
+	if err := checkResponse(res); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(res.Body)
+	result := MessagesNumberDeliveryResponse{}
+	if err := decoder.Decode(&result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func decodeToMessagesNumberFollowersResponse(res *http.Response) (*MessagesNumberFollowersResponse, error) {
+	if err := checkResponse(res); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(res.Body)
+	result := MessagesNumberFollowersResponse{}
+	if err := decoder.Decode(&result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func decodeToMessagesFriendDemographicsResponse(res *http.Response) (*MessagesFriendDemographicsResponse, error) {
+	if err := checkResponse(res); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(res.Body)
+	result := MessagesFriendDemographicsResponse{}
+	if err := decoder.Decode(&result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func decodeToMessagesUserInteractionStatsResponse(res *http.Response) (*MessagesUserInteractionStatsResponse, error) {
+	if err := checkResponse(res); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(res.Body)
+	result := MessagesUserInteractionStatsResponse{}
+	if err := decoder.Decode(&result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func decodeToMessagesProgressResponse(res *http.Response) (*MessagesProgressResponse, error) {
+	if err := checkResponse(res); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(res.Body)
+	result := MessagesProgressResponse{}
+	if err := decoder.Decode(&result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func decodeToAccessTokenResponse(res *http.Response) (*AccessTokenResponse, error) {
+	if err := checkResponse(res); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(res.Body)
+	result := AccessTokenResponse{}
 	if err := decoder.Decode(&result); err != nil {
 		return nil, err
 	}
