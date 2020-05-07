@@ -18,6 +18,8 @@ Installation and Usage
 - Create new Messaging Channel
 - Get `Channel Secret` on "Basic Setting" tab.
 - Issue `Channel Access Token` on "Messaging API" tab.
+- Open LINE OA manager from "Basic Setting" tab.
+- Go to Reply setting on OA manager, enable "webhook"
 
 
 ### 2. Just Deploy this on Heroku
