@@ -45,6 +45,9 @@ const (
 	APIEndpointGetRoomMemberProfile       = "/v2/bot/room/%s/member/%s"
 	APIEndpointGetGroupMemberIDs          = "/v2/bot/group/%s/members/ids"
 	APIEndpointGetRoomMemberIDs           = "/v2/bot/room/%s/members/ids"
+	APIEndpointGetGroupMemberCount        = "/v2/bot/group/%s/members/count"
+	APIEndpointGetRoomMemberCount         = "/v2/bot/room/%s/members/count"
+	APIEndpointGetGroupSummary            = "/v2/bot/group/%s/summary"
 	APIEndpointCreateRichMenu             = "/v2/bot/richmenu"
 	APIEndpointGetRichMenu                = "/v2/bot/richmenu/%s"
 	APIEndpointListRichMenu               = "/v2/bot/richmenu/list"
@@ -69,9 +72,18 @@ const (
 	APIEndpointGetMessageDelivery = "/v2/bot/message/delivery/%s"
 	APIEndpointGetMessageProgress = "/v2/bot/message/progress/%s"
 	APIEndpointInsight            = "/v2/bot/insight/%s"
+	APIEndpointGetBotInfo         = "/v2/bot/info"
 
 	APIEndpointIssueAccessToken  = "/v2/oauth/accessToken"
 	APIEndpointRevokeAccessToken = "/v2/oauth/revoke"
+
+	APIEndpointIssueAccessTokenV2  = "/oauth2/v2.1/token"
+	APIEndpointGetAccessTokensV2   = "/oauth2/v2.1/tokens/kid"
+	APIEndpointRevokeAccessTokenV2 = "/oauth2/v2.1/revoke"
+
+	APIEndpointGetWebhookInfo     = "/v2/bot/channel/webhook/endpoint"
+	APIEndpointSetWebhookEndpoint = "/v2/bot/channel/webhook/endpoint"
+	APIEndpointTestWebhook        = "/v2/bot/channel/webhook/test"
 )
 
 // Client type
@@ -81,6 +93,7 @@ type Client struct {
 	endpointBase     *url.URL     // default APIEndpointBase
 	endpointBaseData *url.URL     // default APIEndpointBaseData
 	httpClient       *http.Client // default http.DefaultClient
+	retryKeyID       string       // X-Line-Retry-Key allows you to safely retry API requests without duplicating messages
 }
 
 // ClientOption type
@@ -163,6 +176,9 @@ func (client *Client) url(base *url.URL, endpoint string) string {
 func (client *Client) do(ctx context.Context, req *http.Request) (*http.Response, error) {
 	req.Header.Set("Authorization", "Bearer "+client.channelToken)
 	req.Header.Set("User-Agent", "LINE-BotSDK-Go/"+version)
+	if len(client.retryKeyID) > 0 {
+		req.Header.Set("X-Line-Retry-Key", client.retryKeyID)
+	}
 	if ctx != nil {
 		req = req.WithContext(ctx)
 	}
@@ -214,6 +230,10 @@ func (client *Client) delete(ctx context.Context, endpoint string) (*http.Respon
 		return nil, err
 	}
 	return client.do(ctx, req)
+}
+
+func (client *Client) setRetryKey(retryKey string) {
+	client.retryKeyID = retryKey
 }
 
 func closeResponse(res *http.Response) error {
