@@ -51,14 +51,16 @@ type RichMenuBounds struct {
 
 // RichMenuAction with type
 type RichMenuAction struct {
-	Type    RichMenuActionType `json:"type"`
-	URI     string             `json:"uri,omitempty"`
-	Text    string             `json:"text,omitempty"`
-	Data    string             `json:"data,omitempty"`
-	Mode    string             `json:"mode,omitempty"`
-	Initial string             `json:"initial,omitempty"`
-	Max     string             `json:"max,omitempty"`
-	Min     string             `json:"min,omitempty"`
+	Type        RichMenuActionType `json:"type"`
+	URI         string             `json:"uri,omitempty"`
+	Text        string             `json:"text,omitempty"`
+	DisplayText string             `json:"displayText,omitemtpy"`
+	Label       string             `json:"label,omitemtpy"`
+	Data        string             `json:"data,omitempty"`
+	Mode        string             `json:"mode,omitempty"`
+	Initial     string             `json:"initial,omitempty"`
+	Max         string             `json:"max,omitempty"`
+	Min         string             `json:"min,omitempty"`
 }
 
 // AreaDetail type for areas array
@@ -95,8 +97,10 @@ type RichMenu struct {
             "height": 1686
           },
           "action": {
-            "type": "postback"
-            "data": "action=buy&itemid=123"
+            "type": "postback",
+            "data": "action=buy&itemid=123",
+            "label":"Buy",
+            "displayText":"Buy"
           }
         }
       ]
@@ -113,7 +117,7 @@ func (client *Client) GetRichMenu(richMenuID string) *GetRichMenuCall {
 	}
 }
 
-//GetRichMenuCall type
+// GetRichMenuCall type
 type GetRichMenuCall struct {
 	c   *Client
 	ctx context.Context
@@ -146,7 +150,7 @@ func (client *Client) GetUserRichMenu(userID string) *GetUserRichMenuCall {
 	}
 }
 
-//GetUserRichMenuCall type
+// GetUserRichMenuCall type
 type GetUserRichMenuCall struct {
 	c   *Client
 	ctx context.Context
@@ -232,7 +236,7 @@ func (client *Client) DeleteRichMenu(richMenuID string) *DeleteRichMenuCall {
 	}
 }
 
-//DeleteRichMenuCall type
+// DeleteRichMenuCall type
 type DeleteRichMenuCall struct {
 	c   *Client
 	ctx context.Context
@@ -266,7 +270,7 @@ func (client *Client) LinkUserRichMenu(userID, richMenuID string) *LinkUserRichM
 	}
 }
 
-//LinkUserRichMenuCall type
+// LinkUserRichMenuCall type
 type LinkUserRichMenuCall struct {
 	c   *Client
 	ctx context.Context
@@ -300,7 +304,7 @@ func (client *Client) UnlinkUserRichMenu(userID string) *UnlinkUserRichMenuCall 
 	}
 }
 
-//UnlinkUserRichMenuCall type
+// UnlinkUserRichMenuCall type
 type UnlinkUserRichMenuCall struct {
 	c   *Client
 	ctx context.Context
@@ -333,7 +337,7 @@ func (client *Client) SetDefaultRichMenu(richMenuID string) *SetDefaultRichMenuC
 	}
 }
 
-//SetDefaultRichMenuCall type
+// SetDefaultRichMenuCall type
 type SetDefaultRichMenuCall struct {
 	c   *Client
 	ctx context.Context
@@ -423,7 +427,7 @@ func (client *Client) GetRichMenuList() *GetRichMenuListCall {
 	}
 }
 
-//GetRichMenuListCall type
+// GetRichMenuListCall type
 type GetRichMenuListCall struct {
 	c   *Client
 	ctx context.Context

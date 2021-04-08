@@ -41,6 +41,7 @@ const (
 	APIEndpointLeaveGroup                 = "/v2/bot/group/%s/leave"
 	APIEndpointLeaveRoom                  = "/v2/bot/room/%s/leave"
 	APIEndpointGetProfile                 = "/v2/bot/profile/%s"
+	APIEndpointGetFollowerIDs             = "/v2/bot/followers/ids"
 	APIEndpointGetGroupMemberProfile      = "/v2/bot/group/%s/member/%s"
 	APIEndpointGetRoomMemberProfile       = "/v2/bot/room/%s/member/%s"
 	APIEndpointGetGroupMemberIDs          = "/v2/bot/group/%s/members/ids"
@@ -183,7 +184,6 @@ func (client *Client) do(ctx context.Context, req *http.Request) (*http.Response
 		req = req.WithContext(ctx)
 	}
 	return client.httpClient.Do(req)
-
 }
 
 func (client *Client) get(ctx context.Context, base *url.URL, endpoint string, query url.Values) (*http.Response, error) {
