@@ -1,8 +1,6 @@
 {
-    "version": "0.1.0",
+    "version": "2.0.0",
     "command": "go",
-    "isShellCommand": true,
-    "showOutput": "silent",
     "options": {
         "env": {
             "GOPATH": "/Users/Evan/src/go"
@@ -10,14 +8,34 @@
     },
     "tasks": [
         {
-            "taskName": "install",
-            "args": [ "-v", "./..."],
-            "isBuildCommand": true
+            "label": "install",
+            "type": "shell",
+            "command": "go",
+            "args": [
+                "install",
+                "-v",
+                "./..."
+            ],
+            "problemMatcher": [],
+            "group": {
+                "_id": "build",
+                "isDefault": false
+            }
         },
         {
-            "taskName": "test",
-            "args": [ "-v", "./..."],
-            "isTestCommand": true
+            "label": "test",
+            "type": "shell",
+            "command": "go",
+            "args": [
+                "test",
+                "-v",
+                "./..."
+            ],
+            "problemMatcher": [],
+            "group": {
+                "_id": "test",
+                "isDefault": false
+            }
         }
     ]
 }

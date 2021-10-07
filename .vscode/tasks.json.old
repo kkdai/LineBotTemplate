@@ -1,0 +1,23 @@
+{
+    "version": "0.1.0",
+    "command": "go",
+    "isShellCommand": true,
+    "showOutput": "silent",
+    "options": {
+        "env": {
+            "GOPATH": "/Users/Evan/src/go"
+        }
+    },
+    "tasks": [
+        {
+            "taskName": "install",
+            "args": [ "-v", "./..."],
+            "isBuildCommand": true
+        },
+        {
+            "taskName": "test",
+            "args": [ "-v", "./..."],
+            "isTestCommand": true
+        }
+    ]
+}
