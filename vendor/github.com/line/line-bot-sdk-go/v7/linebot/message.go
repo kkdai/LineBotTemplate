@@ -309,6 +309,7 @@ type StickerMessage struct {
 	StickerID           string
 	StickerResourceType StickerResourceType
 	Keywords            []string
+	Text                string
 
 	quickReplyItems *QuickReplyItems
 	sender          *Sender
