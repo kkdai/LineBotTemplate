@@ -53,7 +53,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				// GetMessageQuota: Get how many remain free tier push message quota you still have this month. (maximum 500)
 				quota, err := bot.GetMessageQuota().Do()
-
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
@@ -68,6 +67,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("sticker")).Do(); err != nil {
 					log.Print(err)
 				}
+				var kw string
+				for _, k := range message.Keywords {
+					kw = kw + k
+				}
+				log.Println("收到貼圖訊息:"+message.StickerID+"pkg:"+message.PackageID, " kw:"+kw)
 			}
 		}
 	}
