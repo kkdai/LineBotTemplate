@@ -69,10 +69,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				var kw string
 				for _, k := range message.Keywords {
-					kw = kw + k
+					kw = kw + "," + k
 				}
 
 				log.Println("收到貼圖訊息:"+message.StickerID+"pkg:"+message.PackageID, " kw:"+kw+" text:"+message.Text)
+				log.Println(event.Message)
 			}
 		}
 	}
