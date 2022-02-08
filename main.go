@@ -64,16 +64,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 			// Handle only on Sticker message
 			case *linebot.StickerMessage:
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("sticker")).Do(); err != nil {
-					log.Print(err)
-				}
 				var kw string
 				for _, k := range message.Keywords {
 					kw = kw + "," + k
 				}
 
-				log.Println("收到貼圖訊息:"+message.StickerID+"pkg:"+message.PackageID, " kw:"+kw+" text:"+message.Text)
-				log.Println(event.Message)
+				outStickerResult := fmt.Sprintf("收到貼圖訊息: %s, pkg: %s kw: %s  text: %s", message.StickerID, message.PackageID, kw, message.Text)
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(outStickerResult)).Do(); err != nil {
+					log.Print(err)
+				}
 			}
 		}
 	}
