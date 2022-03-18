@@ -44,6 +44,7 @@ const (
 	FlexComponentTypeSpacer    FlexComponentType = "spacer"
 	FlexComponentTypeSpan      FlexComponentType = "span"
 	FlexComponentTypeText      FlexComponentType = "text"
+	FlexComponentTypeVideo     FlexComponentType = "video"
 )
 
 // FlexBubbleSizeType type
@@ -140,6 +141,22 @@ type FlexImageAspectModeType string
 const (
 	FlexImageAspectModeTypeCover FlexImageAspectModeType = "cover"
 	FlexImageAspectModeTypeFit   FlexImageAspectModeType = "fit"
+)
+
+// FlexVideoAspectRatioType type
+type FlexVideoAspectRatioType string
+
+// FlexVideoAspectRatioType constants
+const (
+	FlexVideoAspectRatioType1to1   FlexVideoAspectRatioType = "1:1"
+	FlexVideoAspectRatioType4to3   FlexVideoAspectRatioType = "4:3"
+	FlexVideoAspectRatioType16to9  FlexVideoAspectRatioType = "16:9"
+	FlexVideoAspectRatioType20to13 FlexVideoAspectRatioType = "20:13"
+	FlexVideoAspectRatioType21to9  FlexVideoAspectRatioType = "21:9"
+	FlexVideoAspectRatioType3to4   FlexVideoAspectRatioType = "3:4"
+	FlexVideoAspectRatioType9to16  FlexVideoAspectRatioType = "9:16"
+	FlexVideoAspectRatioType13to20 FlexVideoAspectRatioType = "13:20"
+	FlexVideoAspectRatioType9to21  FlexVideoAspectRatioType = "9:21"
 )
 
 // FlexBoxLayoutType type
@@ -484,7 +501,9 @@ type BoxComponent struct {
 	Spacing         FlexComponentSpacingType
 	Margin          FlexComponentMarginType
 	Width           string
+	MaxWidth        string
 	Height          string
+	MaxHeight       string
 	CornerRadius    FlexComponentCornerRadiusType
 	BackgroundColor string
 	BorderColor     string
@@ -515,7 +534,9 @@ func (c *BoxComponent) MarshalJSON() ([]byte, error) {
 		Spacing         FlexComponentSpacingType        `json:"spacing,omitempty"`
 		Margin          FlexComponentMarginType         `json:"margin,omitempty"`
 		Width           string                          `json:"width,omitempty"`
+		MaxWidth        string                          `json:"maxWidth,omitempty"`
 		Height          string                          `json:"height,omitempty"`
+		MaxHeight       string                          `json:"maxHeight,omitempty"`
 		CornerRadius    FlexComponentCornerRadiusType   `json:"cornerRadius,omitempty"`
 		BackgroundColor string                          `json:"backgroundColor,omitempty"`
 		BorderColor     string                          `json:"borderColor,omitempty"`
@@ -542,7 +563,9 @@ func (c *BoxComponent) MarshalJSON() ([]byte, error) {
 		Spacing:         c.Spacing,
 		Margin:          c.Margin,
 		Width:           c.Width,
+		MaxWidth:        c.MaxWidth,
 		Height:          c.Height,
+		MaxHeight:       c.MaxHeight,
 		CornerRadius:    c.CornerRadius,
 		BackgroundColor: c.BackgroundColor,
 		BorderColor:     c.BorderColor,
@@ -812,6 +835,7 @@ type TextComponent struct {
 	Align        FlexComponentAlignType
 	Gravity      FlexComponentGravityType
 	Wrap         bool
+	LineSpacing  string
 	Weight       FlexTextWeightType
 	Color        string
 	Action       TemplateAction
@@ -838,6 +862,7 @@ func (c *TextComponent) MarshalJSON() ([]byte, error) {
 		Align        FlexComponentAlignType      `json:"align,omitempty"`
 		Gravity      FlexComponentGravityType    `json:"gravity,omitempty"`
 		Wrap         bool                        `json:"wrap,omitempty"`
+		LineSpacing  string                      `json:"lineSpacing,omitempty"`
 		Weight       FlexTextWeightType          `json:"weight,omitempty"`
 		Color        string                      `json:"color,omitempty"`
 		Action       TemplateAction              `json:"action,omitempty"`
@@ -860,6 +885,7 @@ func (c *TextComponent) MarshalJSON() ([]byte, error) {
 		Align:        c.Align,
 		Gravity:      c.Gravity,
 		Wrap:         c.Wrap,
+		LineSpacing:  c.LineSpacing,
 		Weight:       c.Weight,
 		Color:        c.Color,
 		Action:       c.Action,
@@ -871,6 +897,35 @@ func (c *TextComponent) MarshalJSON() ([]byte, error) {
 		OffsetBottom: c.OffsetBottom,
 		OffsetStart:  c.OffsetStart,
 		OffsetEnd:    c.OffsetEnd,
+	})
+}
+
+// VideoComponent type
+type VideoComponent struct {
+	Type        FlexComponentType
+	URL         string
+	PreviewURL  string
+	AltContent  FlexComponent
+	AspectRatio FlexVideoAspectRatioType
+	Action      *URIAction
+}
+
+// MarshalJSON method of VideoComponent
+func (c *VideoComponent) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&struct {
+		Type        FlexComponentType        `json:"type"`
+		URL         string                   `json:"url"`
+		PreviewURL  string                   `json:"previewUrl"`
+		AltContent  FlexComponent            `json:"altContent"`
+		AspectRatio FlexVideoAspectRatioType `json:"aspectRatio,omitempty"`
+		Action      *URIAction               `json:"action,omitempty"`
+	}{
+		Type:        FlexComponentTypeVideo,
+		URL:         c.URL,
+		PreviewURL:  c.PreviewURL,
+		AltContent:  c.AltContent,
+		AspectRatio: c.AspectRatio,
+		Action:      c.Action,
 	})
 }
 
@@ -900,3 +955,6 @@ func (*SpanComponent) FlexComponent() {}
 
 // FlexComponent implements FlexComponent interface
 func (*TextComponent) FlexComponent() {}
+
+// FlexComponent implements FlexComponent interface
+func (*VideoComponent) FlexComponent() {}
