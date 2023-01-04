@@ -1,0 +1,13 @@
+services:
+- type: web
+  name: LineBotTemplate
+  env: go
+  buildCommand: go build -o app
+  startCommand: ./app
+  plan: free
+  autoDeploy: false
+  envVars:
+  - key: ChannelAccessToken
+    sync: false
+  - key: ChannelSecret
+    sync: false
