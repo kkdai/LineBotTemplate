@@ -1,6 +1,8 @@
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/line/line-bot-sdk-go/v7 v7.18.0 h1:ogrOioYKnCuyDlbNAuFb7hGdv1KGkluKWUcZx/Uocds=
 github.com/line/line-bot-sdk-go/v7 v7.18.0/go.mod h1:2CXH5xBgADszymGNRRUiUqBQ/0G6r2nx3BviBYtnB3U=
+github.com/line/line-bot-sdk-go/v7 v7.19.0 h1:WEbuBBSq65RMMqTn3vIl+Eb4wv2CjhZz7kiw8XTk2Wg=
+github.com/line/line-bot-sdk-go/v7 v7.19.0/go.mod h1:idpoxOZgtSd8JyhctMMpwg5LNgRAIL/QIxa5S0DXcMg=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/net v0.0.0-20190603091049-60506f45cf65/go.mod h1:HSz+uSET+XFnRR8LxR5pz3Of3rY3CfYBVs4xY44aLks=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
