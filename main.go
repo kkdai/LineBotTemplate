@@ -19,7 +19,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/line/line-bot-sdk-go/v7/linebot"
+	"github.com/line/line-bot-sdk-go/v8/linebot"
+	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
 var bot *linebot.Client
@@ -35,8 +36,7 @@ func main() {
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
-	events, err := bot.ParseRequest(r)
-
+	cb, err := webhook.ParseRequest(os.Getenv("ChannelSecret"), r)
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
 			w.WriteHeader(400)
@@ -46,11 +46,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, event := range events {
-		if event.Type == linebot.EventTypeMessage {
-			switch message := event.Message.(type) {
+	for _, event := range cb.Events {
+		log.Printf("Got event %v", event)
+		switch e := event.(type) {
+		case webhook.MessageEvent:
+			switch message := e.Message.(type) {
 			// Handle only on text message
-			case *linebot.TextMessage:
+			case webhook.TextMessageContent:
 				// GetMessageQuota: Get how many remain free tier push message quota you still have this month. (maximum 500)
 				quota, err := bot.GetMessageQuota().Do()
 				if err != nil {
@@ -58,22 +60,31 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				// message.ID: Msg unique ID
 				// message.Text: Msg text
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("msg ID:"+message.ID+":"+"Get:"+message.Text+" , \n OK! remain message:"+strconv.FormatInt(quota.Value, 10))).Do(); err != nil {
+				if _, err = bot.ReplyMessage(e.ReplyToken, linebot.NewTextMessage("msg ID:"+message.Id+":"+"Get:"+message.Text+" , \n OK! remain message:"+strconv.FormatInt(quota.Value, 10))).Do(); err != nil {
 					log.Print(err)
 				}
 
 			// Handle only on Sticker message
-			case *linebot.StickerMessage:
+			case webhook.StickerMessageContent:
 				var kw string
 				for _, k := range message.Keywords {
 					kw = kw + "," + k
 				}
 
-				outStickerResult := fmt.Sprintf("收到貼圖訊息: %s, pkg: %s kw: %s  text: %s", message.StickerID, message.PackageID, kw, message.Text)
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(outStickerResult)).Do(); err != nil {
+				outStickerResult := fmt.Sprintf("收到貼圖訊息: %s, pkg: %s kw: %s  text: %s", message.StickerId, message.PackageId, kw, message.Text)
+				if _, err = bot.ReplyMessage(e.ReplyToken, linebot.NewTextMessage(outStickerResult)).Do(); err != nil {
 					log.Print(err)
 				}
+			default:
+				log.Printf("Unknown message: %v", message)
 			}
+		case webhook.FollowEvent:
+			log.Printf("message: Got followed event")
+		case webhook.PostbackEvent:
+			data := e.Postback.Data
+			log.Printf("Unknown message: Got postback: " + data)
+		case webhook.BeaconEvent:
+			log.Printf("Got beacon: " + e.Beacon.Hwid)
 		}
 	}
 }
