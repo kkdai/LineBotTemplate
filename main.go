@@ -53,6 +53,32 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			switch message := e.Message.(type) {
 			// Handle only on text message
 			case webhook.TextMessageContent:
+				// If it is in group message, check if mention me.
+				switch e.Source.(type) {
+				case webhook.GroupSource:
+				case webhook.RoomSource:
+					for _, mention := range message.Mention.Mentionees {
+						botID := ""
+						botResponse, err := bot.GetBotInfo().Do()
+						if err != nil {
+							botID = botResponse.BasicID
+							fmt.Println("Bot ID=", botID)
+						}
+						switch mention.GetType() {
+						case "user":
+							botMention := mention.(*webhook.UserMentionee)
+							fmt.Println("Mentioned user ID=", botMention.UserId, " isSelf=", botMention.IsSelf)
+
+							if botMention.IsSelf {
+								if _, err = bot.ReplyMessage(e.ReplyToken, linebot.NewTextMessage("你找我嗎？")).Do(); err != nil {
+									log.Print(err)
+								}
+								return
+							}
+						}
+					}
+				}
+
 				// GetMessageQuota: Get how many remain free tier push message quota you still have this month. (maximum 500)
 				quota, err := bot.GetMessageQuota().Do()
 				if err != nil {
