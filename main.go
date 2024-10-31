@@ -55,7 +55,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case webhook.TextMessageContent:
 				// If it is in group message, check if mention me.
 				switch e.Source.(type) {
-				case webhook.GroupSource:
 				case webhook.RoomSource:
 					for _, mention := range message.Mention.Mentionees {
 						botID := ""
@@ -66,7 +65,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						}
 						switch mention.GetType() {
 						case "user":
-							botMention := mention.(*webhook.UserMentionee)
+							botMention := mention.(webhook.UserMentionee)
 							fmt.Println("Mentioned user ID=", botMention.UserId, " isSelf=", botMention.IsSelf)
 
 							if botMention.IsSelf {
