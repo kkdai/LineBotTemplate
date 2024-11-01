@@ -13,103 +13,103 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
-	"github.com/line/line-bot-sdk-go/v8/linebot"
+	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-var bot *linebot.Client
-
 func main() {
-	var err error
-	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
-	log.Println("Bot:", bot, " err:", err)
-	http.HandleFunc("/callback", callbackHandler)
-	port := os.Getenv("PORT")
-	addr := fmt.Sprintf(":%s", port)
-	http.ListenAndServe(addr, nil)
-}
-
-func callbackHandler(w http.ResponseWriter, r *http.Request) {
-	cb, err := webhook.ParseRequest(os.Getenv("ChannelSecret"), r)
+	channelSecret := os.Getenv("ChannelSecret")
+	bot, err := messaging_api.NewMessagingApiAPI(
+		os.Getenv("ChannelAccessToken"),
+	)
 	if err != nil {
-		if err == linebot.ErrInvalidSignature {
-			w.WriteHeader(400)
-		} else {
-			w.WriteHeader(500)
-		}
-		return
+		log.Fatal(err)
 	}
 
-	for _, event := range cb.Events {
-		log.Printf("Got event %v", event)
-		switch e := event.(type) {
-		case webhook.MessageEvent:
-			switch message := e.Message.(type) {
-			// Handle only on text message
-			case webhook.TextMessageContent:
-				// If it is in group message, check if mention me.
-				switch e.Source.(type) {
-				case webhook.RoomSource:
-					for _, mention := range message.Mention.Mentionees {
-						botID := ""
-						botResponse, err := bot.GetBotInfo().Do()
-						if err != nil {
-							botID = botResponse.BasicID
-							fmt.Println("Bot ID=", botID)
-						}
-						switch mention.GetType() {
-						case "user":
-							botMention := mention.(webhook.UserMentionee)
-							fmt.Println("Mentioned user ID=", botMention.UserId, " isSelf=", botMention.IsSelf)
+	// Setup HTTP Server for receiving requests from LINE platform
+	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
+		log.Println("/callback called...")
 
-							if botMention.IsSelf {
-								if _, err = bot.ReplyMessage(e.ReplyToken, linebot.NewTextMessage("你找我嗎？")).Do(); err != nil {
-									log.Print(err)
-								}
-								return
-							}
-						}
+		cb, err := webhook.ParseRequest(channelSecret, req)
+		if err != nil {
+			log.Printf("Cannot parse request: %+v\n", err)
+			if errors.Is(err, webhook.ErrInvalidSignature) {
+				w.WriteHeader(400)
+			} else {
+				w.WriteHeader(500)
+			}
+			return
+		}
+
+		log.Println("Handling events...")
+		for _, event := range cb.Events {
+			log.Printf("/callback called%+v...\n", event)
+
+			switch e := event.(type) {
+			case webhook.MessageEvent:
+				switch message := e.Message.(type) {
+				case webhook.TextMessageContent:
+					if _, err = bot.ReplyMessage(
+						&messaging_api.ReplyMessageRequest{
+							ReplyToken: e.ReplyToken,
+							Messages: []messaging_api.MessageInterface{
+								messaging_api.TextMessage{
+									Text: message.Text,
+								},
+							},
+						},
+					); err != nil {
+						log.Print(err)
+					} else {
+						log.Println("Sent text reply.")
 					}
-				}
-
-				// GetMessageQuota: Get how many remain free tier push message quota you still have this month. (maximum 500)
-				quota, err := bot.GetMessageQuota().Do()
-				if err != nil {
-					log.Println("Quota err:", err)
-				}
-				// message.ID: Msg unique ID
-				// message.Text: Msg text
-				if _, err = bot.ReplyMessage(e.ReplyToken, linebot.NewTextMessage("msg ID:"+message.Id+":"+"Get:"+message.Text+" , \n OK! remain message:"+strconv.FormatInt(quota.Value, 10))).Do(); err != nil {
-					log.Print(err)
-				}
-
-			// Handle only on Sticker message
-			case webhook.StickerMessageContent:
-				var kw string
-				for _, k := range message.Keywords {
-					kw = kw + "," + k
-				}
-
-				outStickerResult := fmt.Sprintf("收到貼圖訊息: %s, pkg: %s kw: %s  text: %s", message.StickerId, message.PackageId, kw, message.Text)
-				if _, err = bot.ReplyMessage(e.ReplyToken, linebot.NewTextMessage(outStickerResult)).Do(); err != nil {
-					log.Print(err)
+				case webhook.StickerMessageContent:
+					replyMessage := fmt.Sprintf(
+						"貼圖訊息: sticker id is %s, stickerResourceType is %s", message.StickerId, message.StickerResourceType)
+					if _, err = bot.ReplyMessage(
+						&messaging_api.ReplyMessageRequest{
+							ReplyToken: e.ReplyToken,
+							Messages: []messaging_api.MessageInterface{
+								messaging_api.TextMessage{
+									Text: replyMessage,
+								},
+							},
+						}); err != nil {
+						log.Print(err)
+					} else {
+						log.Println("Sent sticker reply.")
+					}
+				case webhook.MemberJoinedEvent:
+					log.Printf("Member joined: %s\n", e.Source.(webhook.UserSource).UserId)
+				case webhook.MemberLeftEvent:
+					log.Printf("Member joined: %s\n", e.Source.(webhook.UserSource).UserId)
+				case webhook.FollowEvent:
+					log.Printf("Follow event: %s\n", e.Source.(webhook.UserSource).UserId)
+				case webhook.BeaconEvent:
+					log.Printf("Beacon event: %s\n", e.Source.(webhook.UserSource).UserId)
+				default:
+					log.Printf("Unsupported message content: %T\n", e.Message)
 				}
 			default:
-				log.Printf("Unknown message: %v", message)
+				log.Printf("Unsupported message: %T\n", event)
 			}
-		case webhook.FollowEvent:
-			log.Printf("message: Got followed event")
-		case webhook.PostbackEvent:
-			data := e.Postback.Data
-			log.Printf("Unknown message: Got postback: " + data)
-		case webhook.BeaconEvent:
-			log.Printf("Got beacon: " + e.Beacon.Hwid)
 		}
+	})
+
+	// This is just sample code.
+	// For actual use, you must support HTTPS by using `ListenAndServeTLS`, a reverse proxy or something else.
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
+	fmt.Println("http://localhost:" + port + "/")
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		log.Fatal(err)
 	}
 }
