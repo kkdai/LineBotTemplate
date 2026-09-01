@@ -85,19 +85,20 @@ func main() {
 					} else {
 						log.Println("Sent sticker reply.")
 					}
-				case webhook.MemberJoinedEvent:
-					log.Printf("Member joined: %s\n", e.Source.(webhook.UserSource).UserId)
-				case webhook.MemberLeftEvent:
-					log.Printf("Member joined: %s\n", e.Source.(webhook.UserSource).UserId)
-				case webhook.FollowEvent:
-					log.Printf("Follow event: %s\n", e.Source.(webhook.UserSource).UserId)
-				case webhook.BeaconEvent:
-					log.Printf("Beacon event: %s\n", e.Source.(webhook.UserSource).UserId)
 				default:
 					log.Printf("Unsupported message content: %T\n", e.Message)
 				}
+			case webhook.FollowEvent:
+				log.Printf("Followed by %s\n", sourceID(e.Source))
+			case webhook.MemberJoinedEvent:
+				log.Printf("Members joined %s: %s\n", sourceID(e.Source), userIDs(orZero(e.Joined).Members))
+			case webhook.MemberLeftEvent:
+				log.Printf("Members left %s: %s\n", sourceID(e.Source), userIDs(orZero(e.Left).Members))
+			case webhook.BeaconEvent:
+				beacon := orZero(e.Beacon)
+				log.Printf("Beacon %q from %s: hwid=%s\n", beacon.Type, sourceID(e.Source), beacon.Hwid)
 			default:
-				log.Printf("Unsupported message: %T\n", event)
+				log.Printf("Unsupported event: %T\n", event)
 			}
 		}
 	})
@@ -112,4 +113,42 @@ func main() {
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
+}
+
+// sourceID describes where an event came from. The concrete type behind
+// webhook.SourceInterface depends on the chat: 1:1 chats carry a UserSource,
+// while group and multi-person chats carry a GroupSource or RoomSource, so this
+// must never assume UserSource.
+func sourceID(src webhook.SourceInterface) string {
+	switch s := src.(type) {
+	case webhook.UserSource:
+		return "user " + s.UserId
+	case webhook.GroupSource:
+		return "group " + s.GroupId
+	case webhook.RoomSource:
+		return "room " + s.RoomId
+	default:
+		return fmt.Sprintf("unknown source (%T)", src)
+	}
+}
+
+// orZero dereferences p, returning the zero value when it is nil. The webhook
+// models optional sub-objects as pointers, so payloads that omit them must not
+// crash the handler.
+func orZero[T any](p *T) T {
+	if p == nil {
+		var zero T
+		return zero
+	}
+	return *p
+}
+
+// userIDs collects the user IDs out of the member list carried by member
+// joined/left events.
+func userIDs(members []webhook.UserSource) []string {
+	ids := make([]string, len(members))
+	for i, m := range members {
+		ids[i] = m.UserId
+	}
+	return ids
 }
