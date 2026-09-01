@@ -13,6 +13,7 @@
 package main
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"log"
@@ -33,7 +34,7 @@ func main() {
 	}
 
 	// Setup HTTP Server for receiving requests from LINE platform
-	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
+	http.HandleFunc("POST /callback", func(w http.ResponseWriter, req *http.Request) {
 		log.Println("/callback called...")
 
 		cb, err := webhook.ParseRequest(channelSecret, req)
@@ -104,10 +105,7 @@ func main() {
 
 	// This is just sample code.
 	// For actual use, you must support HTTPS by using `ListenAndServeTLS`, a reverse proxy or something else.
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5000"
-	}
+	port := cmp.Or(os.Getenv("PORT"), "5000")
 	fmt.Println("http://localhost:" + port + "/")
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
