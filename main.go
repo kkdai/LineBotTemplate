@@ -24,84 +24,13 @@ import (
 )
 
 func main() {
-	channelSecret := os.Getenv("ChannelSecret")
-	bot, err := messaging_api.NewMessagingApiAPI(
-		os.Getenv("ChannelAccessToken"),
-	)
+	bot, err := messaging_api.NewMessagingApiAPI(os.Getenv("ChannelAccessToken"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Setup HTTP Server for receiving requests from LINE platform
-	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
-		log.Println("/callback called...")
-
-		cb, err := webhook.ParseRequest(channelSecret, req)
-		if err != nil {
-			log.Printf("Cannot parse request: %+v\n", err)
-			if errors.Is(err, webhook.ErrInvalidSignature) {
-				w.WriteHeader(400)
-			} else {
-				w.WriteHeader(500)
-			}
-			return
-		}
-
-		log.Println("Handling events...")
-		for _, event := range cb.Events {
-			log.Printf("/callback called%+v...\n", event)
-
-			switch e := event.(type) {
-			case webhook.MessageEvent:
-				switch message := e.Message.(type) {
-				case webhook.TextMessageContent:
-					if _, err = bot.ReplyMessage(
-						&messaging_api.ReplyMessageRequest{
-							ReplyToken: e.ReplyToken,
-							Messages: []messaging_api.MessageInterface{
-								messaging_api.TextMessage{
-									Text: message.Text,
-								},
-							},
-						},
-					); err != nil {
-						log.Print(err)
-					} else {
-						log.Println("Sent text reply.")
-					}
-				case webhook.StickerMessageContent:
-					replyMessage := fmt.Sprintf(
-						"貼圖訊息: sticker id is %s, stickerResourceType is %s", message.StickerId, message.StickerResourceType)
-					if _, err = bot.ReplyMessage(
-						&messaging_api.ReplyMessageRequest{
-							ReplyToken: e.ReplyToken,
-							Messages: []messaging_api.MessageInterface{
-								messaging_api.TextMessage{
-									Text: replyMessage,
-								},
-							},
-						}); err != nil {
-						log.Print(err)
-					} else {
-						log.Println("Sent sticker reply.")
-					}
-				default:
-					log.Printf("Unsupported message content: %T\n", e.Message)
-				}
-			case webhook.FollowEvent:
-				log.Printf("Followed by %s\n", sourceID(e.Source))
-			case webhook.MemberJoinedEvent:
-				log.Printf("Members joined %s: %s\n", sourceID(e.Source), userIDs(orZero(e.Joined).Members))
-			case webhook.MemberLeftEvent:
-				log.Printf("Members left %s: %s\n", sourceID(e.Source), userIDs(orZero(e.Left).Members))
-			case webhook.BeaconEvent:
-				beacon := orZero(e.Beacon)
-				log.Printf("Beacon %q from %s: hwid=%s\n", beacon.Type, sourceID(e.Source), beacon.Hwid)
-			default:
-				log.Printf("Unsupported event: %T\n", event)
-			}
-		}
-	})
+	http.HandleFunc("/callback", callbackHandler(os.Getenv("ChannelSecret"), bot))
 
 	// This is just sample code.
 	// For actual use, you must support HTTPS by using `ListenAndServeTLS`, a reverse proxy or something else.
@@ -112,6 +41,64 @@ func main() {
 	fmt.Println("http://localhost:" + port + "/")
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
+	}
+}
+
+// callbackHandler returns the webhook handler: it verifies the LINE signature,
+// then dispatches every event in the request.
+func callbackHandler(channelSecret string, bot *messaging_api.MessagingApiAPI) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		cb, err := webhook.ParseRequest(channelSecret, req)
+		if err != nil {
+			log.Printf("Cannot parse request: %+v\n", err)
+			if errors.Is(err, webhook.ErrInvalidSignature) {
+				w.WriteHeader(http.StatusBadRequest)
+			} else {
+				w.WriteHeader(http.StatusInternalServerError)
+			}
+			return
+		}
+
+		for _, event := range cb.Events {
+			log.Printf("Handling event: %+v\n", event)
+			handleEvent(bot, event)
+		}
+	}
+}
+
+func handleEvent(bot *messaging_api.MessagingApiAPI, event webhook.EventInterface) {
+	switch e := event.(type) {
+	case webhook.MessageEvent:
+		switch message := e.Message.(type) {
+		case webhook.TextMessageContent:
+			replyText(bot, e.ReplyToken, message.Text)
+		case webhook.StickerMessageContent:
+			replyText(bot, e.ReplyToken, fmt.Sprintf(
+				"貼圖訊息: sticker id is %s, stickerResourceType is %s", message.StickerId, message.StickerResourceType))
+		default:
+			log.Printf("Unsupported message content: %T\n", e.Message)
+		}
+	case webhook.FollowEvent:
+		log.Printf("Followed by %s\n", sourceID(e.Source))
+	case webhook.MemberJoinedEvent:
+		log.Printf("Members joined %s: %s\n", sourceID(e.Source), userIDs(orZero(e.Joined).Members))
+	case webhook.MemberLeftEvent:
+		log.Printf("Members left %s: %s\n", sourceID(e.Source), userIDs(orZero(e.Left).Members))
+	case webhook.BeaconEvent:
+		beacon := orZero(e.Beacon)
+		log.Printf("Beacon %q from %s: hwid=%s\n", beacon.Type, sourceID(e.Source), beacon.Hwid)
+	default:
+		log.Printf("Unsupported event: %T\n", event)
+	}
+}
+
+// replyText answers a reply token with a single text message.
+func replyText(bot *messaging_api.MessagingApiAPI, replyToken, text string) {
+	if _, err := bot.ReplyMessage(&messaging_api.ReplyMessageRequest{
+		ReplyToken: replyToken,
+		Messages:   []messaging_api.MessageInterface{messaging_api.TextMessage{Text: text}},
+	}); err != nil {
+		log.Print(err)
 	}
 }
 
