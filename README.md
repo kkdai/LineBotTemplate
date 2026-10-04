@@ -13,14 +13,14 @@ A minimal Golang LINE Bot template built on the official [line-bot-sdk-go v8](ht
 - Replies with the sticker ID / resource type when it receives a sticker
 - Logs every incoming event so you can see the payload shape while developing
 
-That is the whole app — one file, [`main.go`](main.go), roughly 100 lines. It is meant to be read and then rewritten into your own bot.
+That is the whole app — one file, [`main.go`](main.go), roughly 150 lines. It is meant to be read and then rewritten into your own bot.
 
 ## Requirements
 
 | | |
 |---|---|
-| Go | 1.25 or later |
-| SDK | `github.com/line/line-bot-sdk-go/v8` v8.22.0 |
+| Go | 1.26 or later |
+| SDK | `github.com/line/line-bot-sdk-go/v8` v8.23.0 |
 
 ## Environment variables
 
@@ -93,10 +93,10 @@ Then set the webhook URL to `https://<subdomain>.ngrok-free.app/callback`.
 
 ## Making it your own
 
-All the interesting code lives in the event loop in `main.go`:
+All the interesting code lives in `handleEvent` in `main.go`; `callbackHandler` verifies the signature and feeds it each event, and `replyText` is a helper for plain text replies:
 
 ```go
-for _, event := range cb.Events {
+func handleEvent(bot *messaging_api.MessagingApiAPI, event webhook.EventInterface) {
     switch e := event.(type) {
     case webhook.MessageEvent:
         switch message := e.Message.(type) {
